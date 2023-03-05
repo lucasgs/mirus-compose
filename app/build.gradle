@@ -1,8 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
-
 android {
     namespace 'com.dendron.mirus'
     compileSdk 33
@@ -26,6 +27,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        def tmdbApiKey = properties.getProperty("tmdb_api_key", "")
+
+        it.buildConfigField 'String', "TMDB_API_KEY", tmdbApiKey
+
+        it.resValue 'string', "api_key", tmdbApiKey
+
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -64,4 +77,25 @@ dependencies {
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    // coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // dagger hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation "androidx.hilt:hilt-compiler:1.0.0"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+//    implementation "androidx.hilt:hilt-navigation:1.0.0"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+
+    // navigation
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    // image manipulation
+    implementation("io.coil-kt:coil-compose:2.2.2")
+}
+
+kapt {
+    correctErrorTypes true
 }

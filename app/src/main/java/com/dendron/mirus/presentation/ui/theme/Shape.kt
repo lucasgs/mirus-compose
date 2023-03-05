@@ -1,4 +1,4 @@
-package com.dendron.mirus.ui.theme
+package com.dendron.mirus.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

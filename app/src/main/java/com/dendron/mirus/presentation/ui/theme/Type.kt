@@ -1,4 +1,4 @@
-package com.dendron.mirus.ui.theme
+package com.dendron.mirus.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
