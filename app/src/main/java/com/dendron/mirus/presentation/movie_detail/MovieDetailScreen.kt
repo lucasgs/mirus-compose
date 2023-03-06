@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,21 +20,21 @@ import com.dendron.mirus.presentation.ui.theme.MyPurple200
 fun MovieDetailScreen(
     viewModel: MovieDetailViewModel = hiltViewModel(),
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.state.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MyPurple200)
     ) {
-        state.movie?.let { movie ->
+        state.value.movie?.let { movie ->
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 item {
                     MovieDetailItem(movie = movie)
                 }
             }
-            if (state.error.isNotBlank()) {
+            if (state.value.error.isNotBlank()) {
                 Text(
-                    text = state.error,
+                    text = state.value.error,
                     color = Color.Red,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -42,7 +43,7 @@ fun MovieDetailScreen(
                         .align(Alignment.Center)
                 )
             }
-            if (state.isLoading) {
+            if (state.value.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center)

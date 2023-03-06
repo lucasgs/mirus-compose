@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +25,7 @@ fun MovieListScreen(
     navController: NavController,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
+    val state = viewModel.state.collectAsState()
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MyPurple700)
@@ -34,7 +35,7 @@ fun MovieListScreen(
             columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(5.dp),
         ) {
-            items(state.movies){movie ->
+            items(state.value.movies){movie ->
                 MovieListItem(
                     movie = movie,
                     showTitles = true,
@@ -44,9 +45,9 @@ fun MovieListScreen(
                 )
             }
         }
-        if (state.error.isNotBlank()){
+        if (state.value.error.isNotBlank()){
             Text(
-                text = state.error,
+                text = state.value.error,
                 color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -55,7 +56,7 @@ fun MovieListScreen(
                     .align(Alignment.Center)
             )
         }
-        if (state.isLoading) {
+        if (state.value.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
