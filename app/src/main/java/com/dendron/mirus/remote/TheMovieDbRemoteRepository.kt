@@ -3,6 +3,7 @@ package com.dendron.mirus.remote
 import com.dendron.mirus.domain.model.Movie
 import com.dendron.mirus.domain.repository.MovieRepository
 import com.dendron.mirus.remote.dto.toMovie
+import com.dendron.mirus.remote.dto.toMovieDetail
 import javax.inject.Inject
 
 class TheMovieDbRemoteRepository @Inject constructor(
@@ -21,7 +22,7 @@ class TheMovieDbRemoteRepository @Inject constructor(
     }
 
     override suspend fun getMovieDetails(movieId: String): Movie {
-        return api.getMovie(movieId).toMovie()
+        return api.getMovie(movieId).toMovieDetail()
     }
 
     override suspend fun searchMovies(query: String): List<Movie> {

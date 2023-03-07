@@ -1,6 +1,6 @@
 package com.dendron.mirus.remote.dto
 
 class GenreDto(
-    val id: Integer,
+    val id: Int,
     val name: String
 )

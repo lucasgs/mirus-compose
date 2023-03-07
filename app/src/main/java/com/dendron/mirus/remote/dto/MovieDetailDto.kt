@@ -5,13 +5,13 @@ import com.dendron.mirus.domain.model.Genre
 import com.dendron.mirus.domain.model.Movie
 import com.google.gson.annotations.SerializedName
 
-data class ResultDto(
+data class MovieDetailDto(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")
     val backdropPath: String,
-    @SerializedName("genre_ids")
-    val genreIds: List<Int>?,
+    @SerializedName("genres")
+    val genres: List<GenreDto>?,
     @SerializedName("id")
     val id: Int,
     @SerializedName("original_language")
@@ -33,10 +33,10 @@ data class ResultDto(
     @SerializedName("vote_average")
     val voteAverage: Double,
     @SerializedName("vote_count")
-    val voteCount: Int
+    val voteCount: Int,
 )
 
-fun ResultDto.toMovie(): Movie {
+fun MovieDetailDto.toMovieDetail(): Movie {
     return Movie(
         id = id,
         overview = overview,
@@ -46,6 +46,13 @@ fun ResultDto.toMovie(): Movie {
         releaseDate = releaseDate,
         title = title,
         backDropPath = "${Constants.TMDB_BACKDROP_IMAGE_BASE_URL}$backdropPath",
-        genres = genreIds?.map { Genre (id = it, "") } ?: emptyList()
+        genres = genres?.map { it.toGenre() } ?: emptyList()
+    )
+}
+
+fun GenreDto.toGenre(): Genre {
+    return Genre(
+        id = id,
+        name = name,
     )
 }
