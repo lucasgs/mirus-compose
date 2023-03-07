@@ -9,25 +9,23 @@ A movies app
 
 [Kotlin](https://kotlinlang.org/)
 
-[Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle)
+[Jetpack Compose](https://developer.android.com/jetpack/compose)
 
-[View Model](https://developer.android.com/topic/libraries/architecture/viewmodel)
+[Jetpack View Model](https://developer.android.com/topic/libraries/architecture/viewmodel)
 
-[Compose](https://developer.android.com/jetpack/compose)
+[Jetpack Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle)
 
 ## Libraries
 
-- [Kotlin](https://kotlinlang.org/docs/reference/)
-
-- [TMDB](https://www.themoviedb.org/documentation/api)
+- [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 
 - [Coroutines](https://kotlinlang.org/docs/reference/coroutines.html)
 
 - [Retrofit](https://github.com/square/retrofit)
 
-- [Gson](https://github.com/google/gson)
+- [Coil](https://github.com/google/gson)
 
-- [Picasso](https://square.github.io/picasso/)
+- [TMDB](https://www.themoviedb.org/documentation/api)
 
 Add your TMDB key to local.properties before use :)
 > tmdb\_api\_key = "YOUR_KEY"
