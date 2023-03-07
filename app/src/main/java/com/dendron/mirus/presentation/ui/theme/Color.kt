@@ -9,4 +9,4 @@ val Teal200 = Color(0xFF03DAC5)
 
 val MyPurple200 = Color(0xFF262D57)
 val MyPurple700 = Color(0xFF14183B)
-val Rose = Color(0xFFFB2178)
+val Yellow = Color(0xFFE8BD24)

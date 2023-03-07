@@ -38,7 +38,7 @@ fun MovieListItem(
             AsyncImage(
                 model = movie.posterPath,
                 contentDescription = movie.title,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillHeight,
             )
             if (showTitles) {
                 Box(modifier = Modifier
@@ -50,9 +50,7 @@ fun MovieListItem(
                                 Color.Black
                             ),
                         )),
-                ) {
-
-                }
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

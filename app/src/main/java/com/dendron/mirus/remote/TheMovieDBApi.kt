@@ -24,6 +24,9 @@ interface TheMovieDBApi {
     @GET("trending/movie/week")
     suspend fun getTrendingMovies(): ResultsDto
 
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMovies(): ResultsDto
+
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(): ResultsDto
 

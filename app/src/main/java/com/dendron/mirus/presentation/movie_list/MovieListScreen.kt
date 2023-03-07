@@ -2,52 +2,83 @@ package com.dendron.mirus.presentation.movie_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dendron.mirus.presentation.movie_list.components.MovieListItem
 import androidx.navigation.NavController
 import com.dendron.mirus.presentation.Screen
+import com.dendron.mirus.presentation.movie_list.components.EmptySpace
+import com.dendron.mirus.presentation.movie_list.components.HorizontalSection
 import com.dendron.mirus.presentation.ui.theme.MyPurple700
+import kotlinx.coroutines.launch
 
 @Composable
 fun MovieListScreen(
     navController: NavController,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsState()
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MyPurple700)
+    val discoverState = viewModel.state.collectAsState()
+    val topRatedState = viewModel.topRatedMovies.collectAsState()
+    val trendingState = viewModel.trendingMovies.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MyPurple700)
+            .padding(4.dp)
     ) {
-        LazyVerticalGrid(
-//            columns = GridCells.Adaptive(minSize = 100.dp),
-            columns = GridCells.Fixed(3),
-            contentPadding = PaddingValues(5.dp),
-        ) {
-            items(state.value.movies){movie ->
-                MovieListItem(
-                    movie = movie,
-                    showTitles = true,
-                    onItemClick = {
-                        navController.navigate(Screen.MovieDetailScreen.route + "/${movie.id}")
-                    }
-                )
+        Column(modifier = Modifier.fillMaxSize()) {
+            HorizontalSection(
+                title = "Top rated",
+                movies = topRatedState.value.movies,
+                modifier = Modifier.height(200.dp)
+            ) { id ->
+                coroutineScope.launch {
+                    navController.navigate(Screen.MovieDetailScreen.route + "/$id")
+                }
             }
+            EmptySpace()
+            HorizontalSection(
+                title = "Discover",
+                movies = discoverState.value.movies,
+                modifier = Modifier.height(200.dp)
+            ) { id ->
+                coroutineScope.launch {
+                    navController.navigate(Screen.MovieDetailScreen.route + "/$id")
+                }
+            }
+            EmptySpace()
+            HorizontalSection(
+                title = "Trending",
+                movies = trendingState.value.movies,
+                modifier = Modifier.height(300.dp)
+            ) { id ->
+                coroutineScope.launch {
+                    navController.navigate(Screen.MovieDetailScreen.route + "/$id")
+                }
+            }
+//            VerticalSection(
+//                title = "TRENDING",
+//                movies = trendingState.value.movies,
+//                onItemClick = { id ->
+//                    coroutineScope.launch {
+//                        navController.navigate(Screen.MovieDetailScreen.route + "/$id")
+//                    }
+//                })
         }
-        if (state.value.error.isNotBlank()){
+        if (discoverState.value.error.isNotBlank()) {
             Text(
-                text = state.value.error,
+                text = discoverState.value.error,
                 color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -56,7 +87,7 @@ fun MovieListScreen(
                     .align(Alignment.Center)
             )
         }
-        if (state.value.isLoading) {
+        if (discoverState.value.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)

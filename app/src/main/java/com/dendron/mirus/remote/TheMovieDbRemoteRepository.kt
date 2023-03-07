@@ -12,6 +12,14 @@ class TheMovieDbRemoteRepository @Inject constructor(
         return api.getDiscoverMovies().resultDto.map { it.toMovie() }
     }
 
+    override suspend fun getTopRatedMovies(): List<Movie> {
+       return api.getTopRatedMovies().resultDto.map { it.toMovie() }
+    }
+
+    override suspend fun getTrendingMovies(): List<Movie> {
+        return api.getTrendingMovies().resultDto.map { it.toMovie() }
+    }
+
     override suspend fun getMovieDetails(movieId: String): Movie {
         return api.getMovie(movieId).toMovie()
     }

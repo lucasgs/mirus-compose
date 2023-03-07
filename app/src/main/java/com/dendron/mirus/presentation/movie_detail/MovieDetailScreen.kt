@@ -2,7 +2,6 @@ package com.dendron.mirus.presentation.movie_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +26,7 @@ fun MovieDetailScreen(
             .background(MyPurple200)
     ) {
         state.value.movie?.let { movie ->
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                item {
-                    MovieDetailItem(movie = movie)
-                }
-            }
+            MovieDetailItem(movie = movie)
             if (state.value.error.isNotBlank()) {
                 Text(
                     text = state.value.error,
