@@ -39,15 +39,17 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(
                             route = Screen.MovieListScreen.route
-                        ){
+                        ) {
                             MovieListScreen(navController = navController)
                         }
 
                         composable(
                             route = Screen.MovieDetailScreen.route + "/{movieId}",
-                            arguments = listOf(navArgument(Constants.MOVIE_ID_KEY) { type = NavType.StringType })
+                            arguments = listOf(navArgument(Constants.MOVIE_ID_KEY) {
+                                type = NavType.StringType
+                            })
                         ) {
-                            MovieDetailScreen()
+                            MovieDetailScreen(navController = navController)
                         }
                     }
                 }

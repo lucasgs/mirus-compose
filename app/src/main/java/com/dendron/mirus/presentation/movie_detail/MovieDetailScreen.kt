@@ -1,6 +1,9 @@
 package com.dendron.mirus.presentation.movie_detail
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,11 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.dendron.mirus.presentation.movie_detail.components.MovieDetailItem
 
 @Composable
 fun MovieDetailScreen(
     viewModel: MovieDetailViewModel = hiltViewModel(),
+    navController: NavController,
 ) {
     val state = viewModel.state.collectAsState()
     Box(
@@ -23,7 +28,9 @@ fun MovieDetailScreen(
             .fillMaxSize()
     ) {
         state.value.movie?.let { movie ->
-            MovieDetailItem(movie = movie)
+            MovieDetailItem(movie = movie) {
+                navController.navigateUp()
+            }
             if (state.value.error.isNotBlank()) {
                 Text(
                     text = state.value.error,

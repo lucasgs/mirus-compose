@@ -24,6 +24,7 @@ import java.math.RoundingMode
 fun MovieDetailItem(
     movie: Movie,
     modifier: Modifier = Modifier,
+    onBackPressed: () -> Unit,
 ) {
     val voteAverage = remember {
         movie.voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toString()
@@ -36,14 +37,16 @@ fun MovieDetailItem(
 
     ) {
         Box(
-            modifier = Modifier
-                .height(250.dp)
+            modifier = Modifier.height(250.dp)
         ) {
             AsyncImage(
                 model = movie.backDropPath,
                 contentDescription = movie.title,
                 contentScale = ContentScale.Crop,
             )
+            BackButton {
+               onBackPressed()
+            }
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -80,8 +83,7 @@ fun MovieDetailItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        horizontal = 0.dp,
-                        vertical = 5.dp
+                        horizontal = 0.dp, vertical = 5.dp
                     )
             ) {
                 movie.genres.onEach { genre ->
@@ -94,8 +96,7 @@ fun MovieDetailItem(
                             text = genre.name,
                             fontSize = MaterialTheme.typography.body2.fontSize,
                             color = Color.Gray,
-                            modifier = Modifier
-                                .padding(5.dp)
+                            modifier = Modifier.padding(5.dp)
                         )
                     }
                 }
