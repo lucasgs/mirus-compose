@@ -28,8 +28,15 @@ fun MovieListScreen(
     val discoverState = viewModel.discoverMovies.collectAsStateWithLifecycle()
     val topRatedState = viewModel.topRatedMovies.collectAsStateWithLifecycle()
     val trendingState = viewModel.trendingMovies.collectAsStateWithLifecycle()
+    val error = viewModel.isError.collectAsStateWithLifecycle(emptyList())
 
     val coroutineScope = rememberCoroutineScope()
+
+    fun navigateToDetailScreen(movieId: Int) {
+        coroutineScope.launch {
+            navController.navigate(Screen.MovieDetailScreen.route + "/$movieId")
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -37,16 +44,14 @@ fun MovieListScreen(
             .background(MyPurple700)
             .padding(4.dp)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column() {
             EmptySpace(height = 16.dp)
             HorizontalSection(
                 title = "Top rated",
                 movies = topRatedState.value.movies,
                 modifier = Modifier.height(200.dp)
             ) { id ->
-                coroutineScope.launch {
-                    navController.navigate(Screen.MovieDetailScreen.route + "/$id")
-                }
+                navigateToDetailScreen(id)
             }
             EmptySpace()
             HorizontalSection(
@@ -54,9 +59,7 @@ fun MovieListScreen(
                 movies = discoverState.value.movies,
                 modifier = Modifier.height(200.dp)
             ) { id ->
-                coroutineScope.launch {
-                    navController.navigate(Screen.MovieDetailScreen.route + "/$id")
-                }
+                navigateToDetailScreen(id)
             }
             EmptySpace()
             HorizontalSection(
@@ -64,26 +67,17 @@ fun MovieListScreen(
                 movies = trendingState.value.movies,
                 modifier = Modifier.height(300.dp)
             ) { id ->
-                coroutineScope.launch {
-                    navController.navigate(Screen.MovieDetailScreen.route + "/$id")
-                }
+                navigateToDetailScreen(id)
             }
-//            VerticalSection(
-//                title = "TRENDING",
-//                movies = trendingState.value.movies,
-//                onItemClick = { id ->
-//                    coroutineScope.launch {
-//                        navController.navigate(Screen.MovieDetailScreen.route + "/$id")
-//                    }
-//                })
         }
-        if (discoverState.value.error.isNotBlank()) {
+        if (error.value.isNotEmpty()) {
             Text(
-                text = discoverState.value.error,
+                text = error.value.joinToString(),
                 color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(Color.White)
                     .padding(horizontal = 20.dp)
                     .align(Alignment.Center)
             )
@@ -96,3 +90,4 @@ fun MovieListScreen(
         }
     }
 }
+

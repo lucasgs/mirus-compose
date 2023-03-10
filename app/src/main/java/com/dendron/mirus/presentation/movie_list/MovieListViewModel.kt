@@ -7,10 +7,7 @@ import com.dendron.mirus.domain.use_case.GetDiscoverMoviesUseCase
 import com.dendron.mirus.domain.use_case.GetTopRatedMoviesUseCase
 import com.dendron.mirus.domain.use_case.GetTrendingMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +25,21 @@ class MovieListViewModel @Inject constructor(
 
     private val _trendingMovies = MutableStateFlow(MovieListState())
     val trendingMovies = _trendingMovies.asStateFlow()
+
+    val isError =
+        combine(_discoverMovies, _topRatedMovies, _trendingMovies) { discover, topRated, trending ->
+            buildList {
+                if (discover.error.isNotEmpty()) {
+                    add(discover.error)
+                }
+                if (topRated.error.isNotEmpty()) {
+                    add(topRated.error)
+                }
+                if (trending.error.isNotEmpty()) {
+                    add(trending.error)
+                }
+            }
+        }
 
     init {
         getTopRatedMovies()
