@@ -38,6 +38,7 @@ fun MovieListScreen(
             .padding(4.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+            EmptySpace(height = 16.dp)
             HorizontalSection(
                 title = "Top rated",
                 movies = topRatedState.value.movies,
