@@ -20,8 +20,8 @@ class MovieListViewModel @Inject constructor(
     private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(MovieListState())
-    val state = _state.asStateFlow()
+    private val _discoverMovies = MutableStateFlow(MovieListState())
+    val discoverMovies = _discoverMovies.asStateFlow()
 
     private val _topRatedMovies = MutableStateFlow(MovieListState())
     val topRatedMovies = _topRatedMovies.asStateFlow()
@@ -31,18 +31,18 @@ class MovieListViewModel @Inject constructor(
 
     init {
         getTopRatedMovies()
-        getDiscoveryMovies()
+        getDiscoverMovies()
         getTrendingMovies()
     }
 
-    private fun getDiscoveryMovies() {
+    private fun getDiscoverMovies() {
         getDiscoverMoviesUseCase().onEach { result ->
             when (result) {
-                is Resource.Success -> _state.value =
+                is Resource.Success -> _discoverMovies.value =
                     MovieListState(movies = result.data ?: emptyList())
-                is Resource.Error -> _state.value =
+                is Resource.Error -> _discoverMovies.value =
                     MovieListState(error = result.message ?: "An expected error occurred")
-                is Resource.Loading -> _state.value = MovieListState(isLoading = true)
+                is Resource.Loading -> _discoverMovies.value = MovieListState(isLoading = true)
             }
         }.launchIn(viewModelScope)
     }
@@ -59,9 +59,9 @@ class MovieListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getTrendingMovies(){
+    private fun getTrendingMovies() {
         getTrendingMoviesUseCase().onEach { result ->
-            when(result) {
+            when (result) {
                 is Resource.Success -> _trendingMovies.value =
                     MovieListState(movies = result.data ?: emptyList())
                 is Resource.Error -> _trendingMovies.value =
