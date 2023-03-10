@@ -44,8 +44,15 @@ fun MovieDetailItem(
                 contentDescription = movie.title,
                 contentScale = ContentScale.Crop,
             )
-            BackButton {
-               onBackPressed()
+            BackButton(
+                modifier = Modifier
+                    .size(30.dp)
+                    .offset(
+                        x = 16.dp,
+                        y = 16.dp
+                    ),
+            ) {
+                onBackPressed()
             }
             Box(
                 modifier = Modifier
