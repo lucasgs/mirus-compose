@@ -8,7 +8,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,41 +25,38 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MirusTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    val navController = rememberNavController()
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.MovieListScreen.route
-                    ) {
-                        composable(
-                            route = Screen.MovieListScreen.route
-                        ) {
-                            MovieListScreen(navController = navController)
-                        }
-
-                        composable(
-                            route = Screen.MovieDetailScreen.route + "/{movieId}",
-                            arguments = listOf(navArgument(Constants.MOVIE_ID_KEY) {
-                                type = NavType.StringType
-                            })
-                        ) {
-                            MovieDetailScreen(navController = navController)
-                        }
-                    }
-                }
-            }
+            MainScreen()
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun MainScreen() {
     MirusTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.MovieListScreen.route
+            ) {
+                composable(
+                    route = Screen.MovieListScreen.route
+                ) {
+                    MovieListScreen(navController = navController)
+                }
+
+                composable(
+                    route = Screen.MovieDetailScreen.route + "/{movieId}",
+                    arguments = listOf(navArgument(Constants.MOVIE_ID_KEY) {
+                        type = NavType.StringType
+                    })
+                ) {
+                    MovieDetailScreen(navController = navController)
+                }
+            }
+        }
     }
 }
