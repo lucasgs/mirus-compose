@@ -8,13 +8,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.dendron.mirus.domain.model.Movie
+import com.dendron.mirus.presentation.movie_list.MovieUiModel
 
 @Composable
 fun VerticalSection(
     title: String,
-    movies: List<Movie>,
+    movies: List<MovieUiModel>,
     modifier: Modifier = Modifier,
+    onFavoriteClick: (Int) -> Unit,
     onItemClick: (Int) -> Unit
 ) {
     Box(modifier = modifier) {
@@ -25,10 +26,14 @@ fun VerticalSection(
                 columns = GridCells.Fixed(3),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(movies) { movie ->
+                items(movies) { model ->
+                    val movie = model.movie
                     MovieListItem(
-                        movie = movie,
+                        model = model,
                         showTitles = true,
+                        onFavoriteClick = {
+                            onFavoriteClick(movie.id)
+                        },
                         onItemClick = {
                             onItemClick(movie.id)
                         }

@@ -28,7 +28,8 @@ fun MovieListScreen(
     val discoverState = viewModel.discoverMovies.collectAsStateWithLifecycle()
     val topRatedState = viewModel.topRatedMovies.collectAsStateWithLifecycle()
     val trendingState = viewModel.trendingMovies.collectAsStateWithLifecycle()
-    val error = viewModel.isError.collectAsStateWithLifecycle(emptyList())
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle()
+    val isError = viewModel.isError.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,18 +39,23 @@ fun MovieListScreen(
         }
     }
 
+    fun onFavoriteClick(model: MovieUiModel) {
+        viewModel.toggleMovieAsFavorite(model)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MyPurple700)
             .padding(4.dp)
     ) {
-        Column() {
+        Column {
             EmptySpace(height = 16.dp)
             HorizontalSection(
                 title = "Top rated",
                 movies = topRatedState.value.movies,
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier.height(200.dp),
+                onFavoriteClick = { model -> onFavoriteClick(model) }
             ) { id ->
                 navigateToDetailScreen(id)
             }
@@ -57,7 +63,8 @@ fun MovieListScreen(
             HorizontalSection(
                 title = "Discover",
                 movies = discoverState.value.movies,
-                modifier = Modifier.height(200.dp)
+                modifier = Modifier.height(200.dp),
+                onFavoriteClick = { model -> onFavoriteClick(model) }
             ) { id ->
                 navigateToDetailScreen(id)
             }
@@ -65,14 +72,15 @@ fun MovieListScreen(
             HorizontalSection(
                 title = "Trending",
                 movies = trendingState.value.movies,
-                modifier = Modifier.height(300.dp)
+                modifier = Modifier.height(300.dp),
+                onFavoriteClick = { model -> onFavoriteClick(model) }
             ) { id ->
                 navigateToDetailScreen(id)
             }
         }
-        if (error.value.isNotEmpty()) {
+        if (isError.value.isNotEmpty()) {
             Text(
-                text = error.value.joinToString(),
+                text = isError.value.joinToString(),
                 color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -82,7 +90,7 @@ fun MovieListScreen(
                     .align(Alignment.Center)
             )
         }
-        if (discoverState.value.isLoading) {
+        if (isLoading.value) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)

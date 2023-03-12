@@ -1,12 +1,18 @@
 package com.dendron.mirus.di
 
+import android.content.Context
 import com.dendron.mirus.common.Constants
+import com.dendron.mirus.domain.repository.FavoriteMovieRepository
+import com.dendron.mirus.domain.repository.FavoriteMovieStore
 import com.dendron.mirus.domain.repository.MovieRepository
+import com.dendron.mirus.local.LocalFavoriteMovieRepository
+import com.dendron.mirus.local.SharedPreferencesFavoriteMovieStore
 import com.dendron.mirus.remote.TheMovieDBApi
-import com.dendron.mirus.remote.TheMovieDbRemoteRepository
+import com.dendron.mirus.remote.TheMovieDbRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -49,7 +55,28 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(api: TheMovieDBApi): MovieRepository {
-        return TheMovieDbRemoteRepository(api)
+    fun provideFavoriteMovieStore(@ApplicationContext appContext: Context): FavoriteMovieStore {
+        return SharedPreferencesFavoriteMovieStore(
+            appContext.getSharedPreferences(
+                Constants.PREFERENCES_NAME,
+                Context.MODE_PRIVATE
+            )
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalFavoriteMovieRepository(
+        localStore: FavoriteMovieStore
+    ): FavoriteMovieRepository {
+        return LocalFavoriteMovieRepository(localStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieRepository(
+        api: TheMovieDBApi
+    ): MovieRepository {
+        return TheMovieDbRepository(api)
     }
 }

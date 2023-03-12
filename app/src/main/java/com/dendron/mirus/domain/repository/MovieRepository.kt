@@ -8,4 +8,5 @@ interface MovieRepository {
     suspend fun getTrendingMovies(): List<Movie>
     suspend fun getMovieDetails(movieId: String): Movie
     suspend fun searchMovies(query: String): List<Movie>
+
 }

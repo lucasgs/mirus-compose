@@ -16,23 +16,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dendron.mirus.domain.model.Movie
+import com.dendron.mirus.presentation.components.FavoriteAction
+import com.dendron.mirus.presentation.movie_list.MovieUiModel
+import com.dendron.mirus.presentation.ui.theme.MyPurple700
+import com.dendron.mirus.presentation.ui.theme.MyRed
 
 @Composable
 fun MovieListItem(
-    movie: Movie,
+    model: MovieUiModel,
     showTitles: Boolean = true,
+    onFavoriteClick: (MovieUiModel) -> Unit,
     onItemClick: (Movie) -> Unit
 ) {
+    val movie = model.movie
     Card(
         elevation = 5.dp,
         modifier = Modifier
-//            .width(500.dp)
             .height(150.dp)
             .clickable { onItemClick(movie) }
             .padding(5.dp)
     ) {
         Box(
             modifier = Modifier
+                .background(MyPurple700)
                 .fillMaxSize()
         ) {
             AsyncImage(
@@ -40,16 +46,26 @@ fun MovieListItem(
                 contentDescription = movie.title,
                 contentScale = ContentScale.FillHeight,
             )
+            FavoriteAction(
+                color = if (model.isFavorite) MyRed else Color.White,
+                onClick = {
+                    onFavoriteClick(model)
+                },
+                modifier = Modifier
+                    .offset(x = 4.dp, y = 4.dp)
+            )
             if (showTitles) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background (
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ),
-                        )),
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color.Black
+                                ),
+                            )
+                        ),
                 )
                 Box(
                     modifier = Modifier

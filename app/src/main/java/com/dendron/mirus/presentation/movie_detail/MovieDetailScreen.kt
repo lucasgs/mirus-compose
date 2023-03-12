@@ -27,8 +27,10 @@ fun MovieDetailScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        state.value.movie?.let { movie ->
-            MovieDetailItem(movie = movie) {
+        state.value.model?.let { model ->
+            MovieDetailItem(model = model, onFavoriteClick = {
+                viewModel.toggleMovieAsFavorite(model)
+            }) {
                 navController.navigateUp()
             }
             if (state.value.error.isNotBlank()) {

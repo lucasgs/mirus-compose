@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -15,17 +16,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.dendron.mirus.domain.model.Movie
+import com.dendron.mirus.presentation.components.FavoriteAction
+import com.dendron.mirus.presentation.movie_list.MovieUiModel
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.ui.theme.MyPurple700
+import com.dendron.mirus.presentation.ui.theme.MyRed
 import java.math.RoundingMode
 
 @Composable
 fun MovieDetailItem(
-    movie: Movie,
+    model: MovieUiModel,
     modifier: Modifier = Modifier,
+    onFavoriteClick: (MovieUiModel) -> Unit,
     onBackPressed: () -> Unit,
 ) {
+
+    val movie = model.movie
+
     val voteAverage = remember {
         movie.voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toString()
     }
@@ -108,9 +115,25 @@ fun MovieDetailItem(
                     }
                 }
             }
-            MovieVoteAverage(
-                voteAverage = voteAverage
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            ) {
+                MovieVoteAverage(
+                    voteAverage = voteAverage
+                )
+                FavoriteAction(
+                    color = if (model.isFavorite) MyRed else Color.White,
+                    onClick = {
+                        onFavoriteClick(model)
+                    },
+                    modifier = Modifier
+                        .size(20.dp)
+                )
+            }
             EmptySpace()
             Text(
                 text = movie.overview,

@@ -6,15 +6,16 @@ import com.dendron.mirus.remote.dto.toMovie
 import com.dendron.mirus.remote.dto.toMovieDetail
 import javax.inject.Inject
 
-class TheMovieDbRemoteRepository @Inject constructor(
-    private val api: TheMovieDBApi
-): MovieRepository {
+class TheMovieDbRepository @Inject constructor(
+    private val api: TheMovieDBApi,
+) : MovieRepository {
+
     override suspend fun getDiscoverMovies(): List<Movie> {
         return api.getDiscoverMovies().resultDto.map { it.toMovie() }
     }
 
     override suspend fun getTopRatedMovies(): List<Movie> {
-       return api.getTopRatedMovies().resultDto.map { it.toMovie() }
+        return api.getTopRatedMovies().resultDto.map { it.toMovie() }
     }
 
     override suspend fun getTrendingMovies(): List<Movie> {
