@@ -1,4 +1,4 @@
-package com.dendron.mirus.presentation.movie_detail.components
+package com.dendron.mirus.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

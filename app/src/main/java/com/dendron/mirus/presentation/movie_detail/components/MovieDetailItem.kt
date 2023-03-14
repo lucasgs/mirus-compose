@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.dendron.mirus.presentation.components.BackButton
 import com.dendron.mirus.presentation.components.FavoriteAction
 import com.dendron.mirus.presentation.movie_list.MovieUiModel
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace

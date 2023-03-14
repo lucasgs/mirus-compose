@@ -2,7 +2,6 @@ package com.dendron.mirus.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -14,6 +13,7 @@ import com.dendron.mirus.common.Constants
 import com.dendron.mirus.presentation.movie_detail.MovieDetailScreen
 import com.dendron.mirus.presentation.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.presentation.movie_list.MovieListScreen
+import com.dendron.mirus.presentation.movies_search.MovieSearchScreen
 
 @Composable
 fun NavigationGraph(
@@ -48,7 +48,7 @@ fun NavigationGraph(
         composable(
             route = Screen.SearchMovie.route,
         ) {
-            Text("Search")
+            MovieSearchScreen(navController = navController)
         }
     }
 }
