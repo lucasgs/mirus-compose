@@ -1,4 +1,4 @@
-package com.dendron.mirus.presentation.movies_search
+package com.dendron.mirus.presentation.movie_search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

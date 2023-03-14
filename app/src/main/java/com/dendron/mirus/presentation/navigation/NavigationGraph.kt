@@ -13,7 +13,7 @@ import com.dendron.mirus.common.Constants
 import com.dendron.mirus.presentation.movie_detail.MovieDetailScreen
 import com.dendron.mirus.presentation.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.presentation.movie_list.MovieListScreen
-import com.dendron.mirus.presentation.movies_search.MovieSearchScreen
+import com.dendron.mirus.presentation.movie_search.MovieSearchScreen
 
 @Composable
 fun NavigationGraph(

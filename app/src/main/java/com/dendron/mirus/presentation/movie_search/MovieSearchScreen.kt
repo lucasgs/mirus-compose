@@ -1,15 +1,22 @@
-package com.dendron.mirus.presentation.movies_search
+package com.dendron.mirus.presentation.movie_search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,10 +39,20 @@ fun MovieSearchScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val focusRequester = FocusRequester()
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     fun navigateToDetailScreen(movieId: Int) {
         coroutineScope.launch {
             navController.navigate(Screen.MovieDetailScreen.route + "/$movieId")
         }
+    }
+
+    fun searchMovie() {
+        viewModel.searchMovie(text)
+        text = ""
     }
 
     Box(
@@ -50,7 +67,7 @@ fun MovieSearchScreen(
         ) {
             EmptySpace(height = 16.dp)
             Row(
-                horizontalArrangement = Arrangement.SpaceAround,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -61,27 +78,24 @@ fun MovieSearchScreen(
                     },
                     value = text,
                     onValueChange = { text = it },
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .background(Color.Transparent)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = {
+                        searchMovie()
+                    }),
                     modifier = Modifier
                         .background(Color.White)
+                        .focusRequester(focusRequester)
                 )
-                OutlinedButton(
-                    shape = CircleShape,
-                    contentPadding = PaddingValues(4.dp),
-                    modifier = Modifier
-                        .size(42.dp),
-                    onClick = {
-                        viewModel.searchMovie(text)
-                        text = ""
-                    },
-                ) {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = Color.Black,
-                        modifier = Modifier
-                            .background(Color.Transparent)
-                    )
-                }
             }
             if (state.value.movies.isEmpty()) {
                 Box(
