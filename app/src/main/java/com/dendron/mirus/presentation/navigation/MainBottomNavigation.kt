@@ -16,7 +16,7 @@ import com.dendron.mirus.presentation.ui.theme.MyPurple200
 fun MainBottomNavigation(navController: NavController) {
     val items = listOf(
         Screen.MovieListScreen,
-//        Screen.SearchMovie,
+        Screen.SearchMovie,
         Screen.FavoriteMovieScreen,
     )
     BottomNavigation(
