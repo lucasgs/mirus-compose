@@ -25,6 +25,7 @@ import com.dendron.mirus.presentation.ui.theme.MyRed
 fun MovieListItem(
     model: MovieUiModel,
     showTitles: Boolean = true,
+    showFavoriteAction: Boolean = true,
     onFavoriteClick: (MovieUiModel) -> Unit,
     onItemClick: (Movie) -> Unit
 ) {
@@ -46,14 +47,16 @@ fun MovieListItem(
                 contentDescription = movie.title,
                 contentScale = ContentScale.FillHeight,
             )
-            FavoriteAction(
-                color = if (model.isFavorite) MyRed else Color.White,
-                onClick = {
-                    onFavoriteClick(model)
-                },
-                modifier = Modifier
-                    .offset(x = 4.dp, y = 4.dp)
-            )
+            if (showFavoriteAction) {
+                FavoriteAction(
+                    color = if (model.isFavorite) MyRed else Color.White,
+                    onClick = {
+                        onFavoriteClick(model)
+                    },
+                    modifier = Modifier
+                        .offset(x = 4.dp, y = 4.dp)
+                )
+            }
             if (showTitles) {
                 Box(
                     modifier = Modifier

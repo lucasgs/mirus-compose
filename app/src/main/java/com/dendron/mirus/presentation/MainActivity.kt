@@ -19,7 +19,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.presentation.movie_detail.MovieDetailScreen
+import com.dendron.mirus.presentation.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.presentation.movie_list.MovieListScreen
+import com.dendron.mirus.presentation.navigation.MainBottomNavigation
+import com.dendron.mirus.presentation.navigation.Screen
 import com.dendron.mirus.presentation.ui.theme.MirusTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -78,7 +81,7 @@ fun NavigationGraph(
         composable(
             route = Screen.FavoriteMovieScreen.route,
         ) {
-            Text("Favorites")
+            MovieFavoriteScreen(navController = navController)
         }
 
         composable(

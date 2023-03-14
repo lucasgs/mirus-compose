@@ -15,7 +15,9 @@ fun VerticalSection(
     title: String,
     movies: List<MovieUiModel>,
     modifier: Modifier = Modifier,
-    onFavoriteClick: (Int) -> Unit,
+    showTitles: Boolean = true,
+    showFavoriteAction: Boolean = true,
+    onFavoriteClick: (MovieUiModel) -> Unit,
     onItemClick: (Int) -> Unit
 ) {
     Box(modifier = modifier) {
@@ -27,14 +29,14 @@ fun VerticalSection(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(movies) { model ->
-                    val movie = model.movie
                     MovieListItem(
                         model = model,
-                        showTitles = true,
+                        showTitles = showTitles,
+                        showFavoriteAction = showFavoriteAction,
                         onFavoriteClick = {
-                            onFavoriteClick(movie.id)
+                            onFavoriteClick(model)
                         },
-                        onItemClick = {
+                        onItemClick = { movie ->
                             onItemClick(movie.id)
                         }
                     )

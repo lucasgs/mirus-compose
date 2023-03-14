@@ -53,7 +53,7 @@ class MovieDetailViewModel @Inject constructor(
     private fun getFavoriteMovies() {
         getFavoriteMovieUseCase().onEach { result ->
             when (result) {
-                is Resource.Success -> _favorites.value = result.data ?: emptyList()
+                is Resource.Success -> _favorites.value = result.data
                 is Resource.Error -> _favorites.value =
                     emptyList()
                 is Resource.Loading -> _favorites.value = emptyList()
@@ -71,7 +71,7 @@ class MovieDetailViewModel @Inject constructor(
         getMovieDetailsUseCase(movieId).onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    result.data?.let { movie ->
+                    result.data.let { movie ->
                         val model = MovieUiModel(movie = movie, false)
                         _state.value = MovieDetailState(model = model)
                     }

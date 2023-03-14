@@ -120,7 +120,7 @@ class MovieListViewModel @Inject constructor(
     private fun getFavoriteMovies() {
         getFavoriteMovieUseCase().onEach { result ->
             when (result) {
-                is Resource.Success -> _favorites.value = result.data ?: emptyList()
+                is Resource.Success -> _favorites.value = result.data
                 is Resource.Error -> _favorites.value =
                     emptyList()
                 is Resource.Loading -> _favorites.value = emptyList()
@@ -132,9 +132,9 @@ class MovieListViewModel @Inject constructor(
         getDiscoverMoviesUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    val movies = result.data?.map { movie ->
+                    val movies = result.data.map { movie ->
                         MovieUiModel(movie, false)
-                    } ?: emptyList()
+                    }
                     _discoverMovies.value =
                         MovieListState(movies = movies)
                 }
@@ -149,9 +149,9 @@ class MovieListViewModel @Inject constructor(
         getTopRatedMoviesUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    val movies = result.data?.map { movie ->
+                    val movies = result.data.map { movie ->
                         MovieUiModel(movie, false)
-                    } ?: emptyList()
+                    }
                     _topRatedMovies.value =
                         MovieListState(movies = movies)
                 }
@@ -166,9 +166,9 @@ class MovieListViewModel @Inject constructor(
         getTrendingMoviesUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> {
-                    val movies = result.data?.map { movie ->
+                    val movies = result.data.map { movie ->
                         MovieUiModel(movie, false)
-                    } ?: emptyList()
+                    }
                     _trendingMovies.value =
                         MovieListState(movies = movies)
                 }

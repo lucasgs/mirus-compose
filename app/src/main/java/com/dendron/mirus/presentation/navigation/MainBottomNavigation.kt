@@ -1,4 +1,4 @@
-package com.dendron.mirus.presentation
+package com.dendron.mirus.presentation.navigation
 
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -16,8 +16,8 @@ import com.dendron.mirus.presentation.ui.theme.MyPurple200
 fun MainBottomNavigation(navController: NavController) {
     val items = listOf(
         Screen.MovieListScreen,
-        Screen.SearchMovie,
-        Screen.FavoriteMovieScreen
+//        Screen.SearchMovie,
+        Screen.FavoriteMovieScreen,
     )
     BottomNavigation(
         backgroundColor = MyPurple200,
@@ -26,16 +26,16 @@ fun MainBottomNavigation(navController: NavController) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
-            BottomNavigationItem(
-                icon = {
-                    Icon(
-                        item.icon,
-                        contentDescription = null
-                    )
-                },
+            val isCurrentRoute = currentRoute == item.route
+            BottomNavigationItem(icon = {
+                Icon(
+                    item.icon,
+                    contentDescription = item.title
+                )
+            },
                 alwaysShowLabel = true,
                 label = { Text(item.title, fontSize = 9.sp) },
-                selected = currentRoute == item.route,
+                selected = isCurrentRoute,
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.Gray,
                 onClick = {
@@ -48,8 +48,7 @@ fun MainBottomNavigation(navController: NavController) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
-            )
+                })
         }
     }
 }

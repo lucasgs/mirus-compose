@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.dendron.mirus.presentation.Screen
+import com.dendron.mirus.presentation.navigation.Screen
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.movie_list.components.HorizontalSection
 import com.dendron.mirus.presentation.ui.theme.MyPurple700
