@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dendron.mirus.presentation.ui.theme.MyPurple200
 
 @Composable
-fun MainBottomNavigation(navController: NavController) {
+fun MainBottomNavigation(navController: NavHostController) {
     val items = listOf(
         Screen.MovieListScreen,
         Screen.SearchMovie,

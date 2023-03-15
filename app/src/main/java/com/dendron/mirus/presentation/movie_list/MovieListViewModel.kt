@@ -103,10 +103,14 @@ class MovieListViewModel @Inject constructor(
         )
 
     init {
-        getFavoriteMovies()
+        refresh()
         getTopRatedMovies()
         getDiscoverMovies()
         getTrendingMovies()
+    }
+
+    fun refresh() {
+        getFavoriteMovies()
     }
 
     fun toggleMovieAsFavorite(model: MovieUiModel) {
