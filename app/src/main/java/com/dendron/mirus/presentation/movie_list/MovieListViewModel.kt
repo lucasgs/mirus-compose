@@ -6,6 +6,7 @@ import com.dendron.mirus.common.Resource
 import com.dendron.mirus.domain.use_case.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -114,11 +115,16 @@ class MovieListViewModel @Inject constructor(
     }
 
     fun toggleMovieAsFavorite(model: MovieUiModel) {
-        toggleMovieFavoriteUseCase(
-            movie = model.movie,
-            isFavorite = model.isFavorite
-        )
-        getFavoriteMovies()
+        viewModelScope.launch {
+            toggleMovieFavoriteUseCase(
+                movie = model.movie,
+                isFavorite = model.isFavorite
+            ).onEach { result ->
+                if (result) {
+                    getFavoriteMovies()
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun getFavoriteMovies() {

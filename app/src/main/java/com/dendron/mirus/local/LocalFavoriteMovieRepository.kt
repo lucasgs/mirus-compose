@@ -12,7 +12,7 @@ class LocalFavoriteMovieRepository(private val localStore: FavoriteMovieStore) :
     private val gson = Gson()
     private val moviesType = object : TypeToken<List<Int>>() {}.type
 
-    override fun saveFavoriteMovie(movie: Movie) {
+    override suspend fun saveFavoriteMovie(movie: Movie) {
         val movies = getFavoritesMovie().toMutableList()
         if (!movies.any { id -> id == movie.id }) {
             movies.add(movie.id)
@@ -21,7 +21,7 @@ class LocalFavoriteMovieRepository(private val localStore: FavoriteMovieStore) :
         }
     }
 
-    override fun removeFavoriteMovie(movie: Movie) {
+    override suspend fun removeFavoriteMovie(movie: Movie) {
         val movies = getFavoritesMovie().toMutableList()
         if (movies.any { id -> id == movie.id }) {
             movies.remove(movie.id)
@@ -30,13 +30,13 @@ class LocalFavoriteMovieRepository(private val localStore: FavoriteMovieStore) :
         }
     }
 
-    override fun getFavoritesMovie(): List<Int> {
+    override suspend fun getFavoritesMovie(): List<Int> {
         val data = localStore.getMovies()
         if (data.isEmpty()) return emptyList()
         return gson.fromJson(data, moviesType)
     }
 
-    override fun isFavoriteMovie(movie: Movie): Boolean {
+    override suspend fun isFavoriteMovie(movie: Movie): Boolean {
         return getFavoritesMovie().any { it == movie.id }
     }
 }

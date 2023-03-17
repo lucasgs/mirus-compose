@@ -67,6 +67,7 @@ fun MovieListScreen(
                     title = "Top rated",
                     movies = topRatedState.value.movies,
                     modifier = Modifier.height(200.dp),
+                    showFavoriteAction = false,
                     onFavoriteClick = { model -> onFavoriteClick(model) }
                 ) { id ->
                     navigateToDetailScreen(id)
@@ -76,6 +77,7 @@ fun MovieListScreen(
                     title = "Discover",
                     movies = discoverState.value.movies,
                     modifier = Modifier.height(200.dp),
+                    showFavoriteAction = false,
                     onFavoriteClick = { model -> onFavoriteClick(model) }
                 ) { id ->
                     navigateToDetailScreen(id)
@@ -85,6 +87,7 @@ fun MovieListScreen(
                     title = "Trending",
                     movies = trendingState.value.movies,
                     modifier = Modifier.height(300.dp),
+                    showFavoriteAction = false,
                     onFavoriteClick = { model -> onFavoriteClick(model) }
                 ) { id ->
                     navigateToDetailScreen(id)

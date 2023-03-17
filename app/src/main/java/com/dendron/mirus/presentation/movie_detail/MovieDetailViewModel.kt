@@ -46,8 +46,9 @@ class MovieDetailViewModel @Inject constructor(
         toggleMovieFavoriteUseCase(
             movie = model.movie,
             isFavorite = model.isFavorite
-        )
-        getFavoriteMovies()
+        ).onEach {
+            getFavoriteMovies()
+        }.launchIn(viewModelScope)
     }
 
     private fun getFavoriteMovies() {

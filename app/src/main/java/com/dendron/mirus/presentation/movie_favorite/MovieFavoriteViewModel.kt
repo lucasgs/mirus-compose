@@ -26,13 +26,9 @@ class MovieFavoriteViewModel @Inject constructor(
     private val _movies = MutableStateFlow(emptyList<Movie>())
     val movies = _movies.flatMapMerge { movieList ->
         flow {
-            emit(
-                MovieFavoriteState(
-                    movies = movieList.map { movie ->
-                        MovieUiModel(movie = movie, true)
-                    }
-                )
-            )
+            emit(MovieFavoriteState(movies = movieList.map { movie ->
+                MovieUiModel(movie = movie, true)
+            }))
         }
     }.stateIn(
         scope = viewModelScope,
@@ -40,46 +36,49 @@ class MovieFavoriteViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000)
     )
 
-    init {
-        refreshData()
-    }
-
-    fun refreshData() {
-        getFavoriteMovies()
-        getMovieDetail()
-    }
-
-    private fun getMovieDetail() {
-        _favorites.onEach { favoriteList ->
-            favoriteList.onEach { movieId ->
-                getMovieDetailsUseCase(movieId = movieId.toString()).onEach { result ->
+    val movies2: StateFlow<MovieFavoriteState> = _favorites.map { favorites ->
+        val list = flow {
+            favorites.map { favorite ->
+                getMovieDetailsUseCase(favorite.toString()).onEach { result ->
                     when (result) {
-                        is Resource.Success -> {
-                            _movies.emit(
-                                _movies.value.plus(result.data).distinct()
+                        is Resource.Success -> emit(
+                            MovieUiModel(
+                                movie = result.data, isFavorite = true
                             )
-                        }
+                        )
                         else -> {}
                     }
-                }.launchIn(viewModelScope)
+                }.collect()
             }
-        }.launchIn(viewModelScope)
+        }.toList()
+        MovieFavoriteState(
+            movies = list
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        initialValue = MovieFavoriteState(isLoading = true),
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000)
+    )
+
+    init {
+        //refresh()
+    }
+
+    fun refresh() {
+        getFavoriteMovies()
     }
 
     fun toggleMovieAsFavorite(model: MovieUiModel) {
         toggleMovieFavoriteUseCase(
-            movie = model.movie,
-            isFavorite = model.isFavorite
-        )
-        getFavoriteMovies()
+            movie = model.movie, isFavorite = model.isFavorite
+        ).launchIn(viewModelScope)
     }
 
     private fun getFavoriteMovies() {
         getFavoriteMovieUseCase().onEach { result ->
             when (result) {
                 is Resource.Success -> _favorites.value = result.data
-                is Resource.Error -> _favorites.value =
-                    emptyList()
+                is Resource.Error -> _favorites.value = emptyList()
                 is Resource.Loading -> _favorites.value = emptyList()
             }
         }.launchIn(viewModelScope)

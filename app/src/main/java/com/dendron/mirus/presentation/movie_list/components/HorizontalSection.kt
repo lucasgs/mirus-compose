@@ -15,6 +15,7 @@ fun HorizontalSection(
     movies: List<MovieUiModel>,
     modifier: Modifier = Modifier,
     rowCount: Int = 1,
+    showFavoriteAction: Boolean = true,
     onFavoriteClick: (MovieUiModel) -> Unit,
     onItemClick: (Int) -> Unit
 ) {
@@ -27,6 +28,7 @@ fun HorizontalSection(
                     MovieListItem(
                         model = model,
                         showTitles = false,
+                        showFavoriteAction = showFavoriteAction,
                         onFavoriteClick = { onFavoriteClick(model) },
                         onItemClick = { onItemClick(movie.id) })
                 }
