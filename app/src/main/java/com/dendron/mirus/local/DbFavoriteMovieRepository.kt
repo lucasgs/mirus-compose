@@ -5,15 +5,18 @@ import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.local.db.AppDatabase
 import com.dendron.mirus.local.db.model.Favorite
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
 class DbFavoriteMovieRepository(private val appDatabase: AppDatabase) : FavoriteMovieRepository {
 
     override suspend fun saveFavoriteMovie(movie: Movie) {
         withContext(Dispatchers.IO) {
-            appDatabase . favoriteDao ().insert(
+            appDatabase.favoriteDao().insert(
                 Favorite(
-                    movieId = movie.id
+                    id = movie.id,
+                    title = movie.title,
+                    posterPath = movie.posterPath,
                 )
             )
         }
@@ -21,17 +24,28 @@ class DbFavoriteMovieRepository(private val appDatabase: AppDatabase) : Favorite
 
     override suspend fun removeFavoriteMovie(movie: Movie) {
         withContext(Dispatchers.IO) {
-            appDatabase.favoriteDao().getFavorites().firstOrNull { it.movieId == movie.id}?.let {
-                appDatabase.favoriteDao().delete(it)
-            }
+            appDatabase.favoriteDao().delete(movie.id)
         }
     }
 
-    override suspend fun getFavoritesMovie(): List<Int> {
-        return appDatabase.favoriteDao().getFavorites().map { it.movieId }
-    }
+    override suspend fun getFavoritesMovie(): Flow<List<Movie>> =
+        appDatabase.favoriteDao().getFavorites().map { favorites ->
+            favorites.map {
+                Movie(
+                    id = it.id,
+                    title = it.title,
+                    posterPath = it.posterPath,
+                    overview = "",
+                    popularity = 0.0,
+                    releaseDate = "",
+                    backDropPath = "",
+                    voteAverage = 0.0,
+                    genres = emptyList()
+                )
+            }
+        }
 
     override suspend fun isFavoriteMovie(movie: Movie): Boolean {
-        return appDatabase.favoriteDao().getFavorites().map { it.movieId }.contains(movie.id)
+        return appDatabase.favoriteDao().isFavorite(movie.id)
     }
 }

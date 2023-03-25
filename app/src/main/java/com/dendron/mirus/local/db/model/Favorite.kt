@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Favorite(
-    @PrimaryKey(autoGenerate = true) val uid: Int = 0,
-    @ColumnInfo(name = "movie_id") val movieId: Int,
+    @PrimaryKey @ColumnInfo(name = "movie_id") val id: Int,
+    @ColumnInfo(name = "movie_title") val title: String,
+    @ColumnInfo(name = "movie_poster_path") val posterPath: String,
 )

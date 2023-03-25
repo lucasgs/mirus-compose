@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,10 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.dendron.mirus.presentation.components.rememberLifecycleEvent
 import com.dendron.mirus.presentation.movie_list.MovieUiModel
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.movie_list.components.VerticalSection
@@ -27,20 +24,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MovieFavoriteScreen(
-    navController: NavHostController,
-    viewModel: MovieFavoriteViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: MovieFavoriteViewModel = hiltViewModel()
 ) {
-    val state = viewModel.movies2.collectAsStateWithLifecycle()
-
+    val state = viewModel.movies.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
 
-    val lifecycleEvent = rememberLifecycleEvent()
-
-    LaunchedEffect(lifecycleEvent) {
-        if (lifecycleEvent == Lifecycle.Event.ON_RESUME) {
-            viewModel.refresh()
-        }
-    }
     fun navigateToDetailScreen(movieId: Int) {
         coroutineScope.launch {
             navController.navigate(Screen.MovieDetailScreen.route + "/$movieId")
@@ -60,8 +48,7 @@ fun MovieFavoriteScreen(
         AnimatedVisibility(visible = !state.value.isLoading) {
             Column {
                 EmptySpace(height = 16.dp)
-                VerticalSection(
-                    title = "Favorites",
+                VerticalSection(title = "Favorites",
                     movies = state.value.movies,
                     showTitles = false,
                     showFavoriteAction = false,
@@ -70,8 +57,7 @@ fun MovieFavoriteScreen(
                     },
                     onItemClick = { movieId ->
                         navigateToDetailScreen(movieId)
-                    }
-                )
+                    })
             }
         }
         if (state.value.error.isNotEmpty()) {
@@ -88,8 +74,7 @@ fun MovieFavoriteScreen(
         }
         if (state.value.isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }

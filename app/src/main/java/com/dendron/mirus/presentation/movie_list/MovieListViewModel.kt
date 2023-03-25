@@ -129,12 +129,7 @@ class MovieListViewModel @Inject constructor(
 
     private fun getFavoriteMovies() {
         getFavoriteMovieUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> _favorites.value = result.data
-                is Resource.Error -> _favorites.value =
-                    emptyList()
-                is Resource.Loading -> _favorites.value = emptyList()
-            }
+            _favorites.value = result.map { it.id }
         }.launchIn(viewModelScope)
     }
 

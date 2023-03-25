@@ -11,6 +11,7 @@ import com.dendron.mirus.domain.use_case.ToggleMovieFavoriteUseCase
 import com.dendron.mirus.presentation.movie_list.MovieUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +22,6 @@ class MovieDetailViewModel @Inject constructor(
     private val getFavoriteMovieUseCase: GetFavoritesMovieUseCase,
 ) : ViewModel() {
     private val _favorites = MutableStateFlow<List<Int>>(emptyList())
-
     private val _state = MutableStateFlow(MovieDetailState())
 
     val state = combine(_state, _favorites) { movieDetail, favorites ->
@@ -52,14 +52,11 @@ class MovieDetailViewModel @Inject constructor(
     }
 
     private fun getFavoriteMovies() {
-        getFavoriteMovieUseCase().onEach { result ->
-            when (result) {
-                is Resource.Success -> _favorites.value = result.data
-                is Resource.Error -> _favorites.value =
-                    emptyList()
-                is Resource.Loading -> _favorites.value = emptyList()
-            }
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            getFavoriteMovieUseCase().onEach { result ->
+                _favorites.value = result.map { it.id }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun getMovieDetail() {
