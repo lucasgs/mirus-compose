@@ -101,6 +101,14 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    // Mocks
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlin_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+
+    // Turbine for testing flows
+    testImplementation 'app.cash.turbine:turbine:0.12.1'
 }
 
 kapt {

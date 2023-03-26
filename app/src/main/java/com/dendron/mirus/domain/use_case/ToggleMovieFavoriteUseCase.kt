@@ -21,6 +21,8 @@ class ToggleMovieFavoriteUseCase @Inject constructor(private val favoriteMovieRe
             emit(false)
         } catch (e: IOException) {
             emit(false)
+        } catch (e: Exception) {
+            emit(false)
         }
     }
 }

@@ -19,6 +19,8 @@ class GetMovieDetailsUseCase @Inject constructor(private val movieRepository: Mo
             emit(Resource.Error(e.localizedMessage))
         } catch (e: IOException) {
             emit(Resource.Error(e.localizedMessage))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage))
         }
     }
 }
