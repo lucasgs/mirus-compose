@@ -17,8 +17,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.dendron.mirus.presentation.components.rememberLifecycleEvent
-import com.dendron.mirus.presentation.movie_list.components.EmptySpace
-import com.dendron.mirus.presentation.movie_list.components.HorizontalSection
+import com.dendron.mirus.presentation.movie_list.components.DiscoverySection
+import com.dendron.mirus.presentation.movie_list.components.TopRatedSection
+import com.dendron.mirus.presentation.movie_list.components.TrendingSection
 import com.dendron.mirus.presentation.navigation.Screen
 import com.dendron.mirus.presentation.ui.theme.MyPurple700
 import kotlinx.coroutines.launch
@@ -60,40 +61,23 @@ fun MovieListScreen(
             .background(MyPurple700)
             .padding(4.dp)
     ) {
-//        AnimatedVisibility(visible = !isLoading.value) {
-            Column {
-                EmptySpace(height = 16.dp)
-                HorizontalSection(
-                    title = "Top rated",
-                    movies = topRatedState.value.movies,
-                    modifier = Modifier.height(200.dp),
-                    showFavoriteAction = false,
-                    onFavoriteClick = { model -> onFavoriteClick(model) }
-                ) { id ->
-                    navigateToDetailScreen(id)
-                }
-                EmptySpace()
-                HorizontalSection(
-                    title = "Discover",
-                    movies = discoverState.value.movies,
-                    modifier = Modifier.height(200.dp),
-                    showFavoriteAction = false,
-                    onFavoriteClick = { model -> onFavoriteClick(model) }
-                ) { id ->
-                    navigateToDetailScreen(id)
-                }
-                EmptySpace()
-                HorizontalSection(
-                    title = "Trending",
-                    movies = trendingState.value.movies,
-                    modifier = Modifier.height(300.dp),
-                    showFavoriteAction = false,
-                    onFavoriteClick = { model -> onFavoriteClick(model) }
-                ) { id ->
-                    navigateToDetailScreen(id)
-                }
-            }
-//        }
+        Column {
+            TopRatedSection(
+                movies = topRatedState.value.movies,
+                onFavoriteClick = ::onFavoriteClick,
+                onNavigateToDetailScreen = ::navigateToDetailScreen
+            )
+            DiscoverySection(
+                movies = discoverState.value.movies,
+                onFavoriteClick = ::onFavoriteClick,
+                onNavigateToDetailScreen = ::navigateToDetailScreen
+            )
+            TrendingSection(
+                movies = trendingState.value.movies,
+                onFavoriteClick = ::onFavoriteClick,
+                onNavigateToDetailScreen = ::navigateToDetailScreen
+            )
+        }
         if (isError.value.isNotEmpty()) {
             Text(
                 text = isError.value.joinToString(),
