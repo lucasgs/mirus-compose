@@ -1,7 +1,7 @@
 # MIRUS
 A movies app
 
-![](screenshots/movies.png)  ![](screenshots/details.png)
+<img src="screenshots/movies.png" width="40%" /> <img src="screenshots/details.png" width="40%"  />
 
 ## Android Architecture Component
 
