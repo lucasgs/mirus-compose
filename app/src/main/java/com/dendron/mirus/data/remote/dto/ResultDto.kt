@@ -1,8 +1,5 @@
 package com.dendron.mirus.data.remote.dto
 
-import com.dendron.mirus.common.Constants
-import com.dendron.mirus.domain.model.Genre
-import com.dendron.mirus.domain.model.Movie
 import com.google.gson.annotations.SerializedName
 
 data class ResultDto(
@@ -36,16 +33,3 @@ data class ResultDto(
     val voteCount: Int
 )
 
-fun ResultDto.toMovie(): Movie {
-    return Movie(
-        id = id,
-        overview = overview,
-        popularity = popularity,
-        voteAverage = voteAverage,
-        posterPath = "${Constants.TMDB_IMAGE_BASE_URL}$posterPath",
-        releaseDate = releaseDate,
-        title = title,
-        backDropPath = "${Constants.TMDB_BACKDROP_IMAGE_BASE_URL}$backdropPath",
-        genres = genreIds?.map { Genre (id = it, "") } ?: emptyList()
-    )
-}

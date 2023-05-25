@@ -5,8 +5,8 @@ import androidx.room.Room
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.remote.TheMovieDBApi
-import com.dendron.mirus.data.repository.MovieRepositoryImp
 import com.dendron.mirus.data.repository.FavoriteMovieRepositoryImp
+import com.dendron.mirus.data.repository.MovieRepositoryImp
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.domain.repository.MovieRepository
 import dagger.Module
@@ -64,9 +64,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMovieRepository(
-        api: TheMovieDBApi
+        api: TheMovieDBApi, appDatabase: AppDatabase
     ): MovieRepository {
-        return MovieRepositoryImp(api)
+        return MovieRepositoryImp(api, appDatabase)
     }
 
     @Provides
@@ -74,7 +74,7 @@ object AppModule {
     fun provideFavoriteDatabase(@ApplicationContext appContext: Context): AppDatabase {
         return Room.databaseBuilder(
             appContext,
-            AppDatabase::class.java, "mirus-database"
+            AppDatabase::class.java, Constants.DB_NAME
         ).build()
     }
 }

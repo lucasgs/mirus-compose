@@ -1,12 +1,17 @@
 package com.dendron.mirus.remote
 
 import com.dendron.mirus.MainDispatcherRule
-import com.dendron.mirus.data.remote.TheMovieDBApi
-import com.dendron.mirus.data.repository.MovieRepositoryImp
+import com.dendron.mirus.data.local.AppDatabase
+import com.dendron.mirus.data.local.MovieDao
+import com.dendron.mirus.data.local.model.MovieEntity
 import com.dendron.mirus.data.local.remote.dto.MovieDetailDto
-import com.dendron.mirus.data.remote.dto.ResultDto
 import com.dendron.mirus.data.local.remote.dto.ResultsDto
+import com.dendron.mirus.data.remote.TheMovieDBApi
+import com.dendron.mirus.data.remote.dto.ResultDto
+import com.dendron.mirus.data.repository.MovieRepositoryImp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -27,23 +32,29 @@ class MovieRepositoryImpTest {
     @Mock
     private lateinit var api: TheMovieDBApi
 
+    @Mock
+    private lateinit var appDatabase: AppDatabase
+
+    @Mock
+    private lateinit var movieDao: MovieDao
+
     private lateinit var movieRepositoryImp: MovieRepositoryImp
 
     @Before
     fun setUp() {
-        movieRepositoryImp = MovieRepositoryImp(api)
-    }
+        movieRepositoryImp = MovieRepositoryImp(api, appDatabase)
 
+        whenever(appDatabase.movieDao()).thenReturn(
+            movieDao
+        )
+    }
 
     @Test
     fun `getTopRatedMovies should return emtpy data if api returns empty`() = runTest {
 
         whenever(api.getTopRatedMovies()).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = emptyList(),
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = emptyList(), totalPages = 1, totalResults = 0
             )
         )
 
@@ -56,14 +67,17 @@ class MovieRepositoryImpTest {
 
         whenever(api.getDiscoverMovies()).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = emptyList(),
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = emptyList(), totalPages = 1, totalResults = 0
             )
         )
 
-        movieRepositoryImp.getDiscoverMovies()
+        whenever(appDatabase.movieDao().getMovies()).thenReturn(
+            flowOf(
+                movieEntities
+            )
+        )
+
+        movieRepositoryImp.getDiscoverMovies().first()
         verify(api).getDiscoverMovies()
     }
 
@@ -72,10 +86,7 @@ class MovieRepositoryImpTest {
 
         whenever(api.getTrendingMovies()).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = emptyList(),
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = emptyList(), totalPages = 1, totalResults = 0
             )
         )
 
@@ -88,10 +99,7 @@ class MovieRepositoryImpTest {
 
         whenever(api.getTopRatedMovies()).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = resultsDto,
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = resultsDto, totalPages = 1, totalResults = 0
             )
         )
 
@@ -104,14 +112,17 @@ class MovieRepositoryImpTest {
 
         whenever(api.getDiscoverMovies()).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = resultsDto.takeLast(1),
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = resultsDto.takeLast(1), totalPages = 1, totalResults = 0
             )
         )
 
-        val movies = movieRepositoryImp.getDiscoverMovies()
+        whenever(appDatabase.movieDao().getMovies()).thenReturn(
+            flowOf(
+                movieEntities
+            )
+        )
+
+        val movies = movieRepositoryImp.getDiscoverMovies().first()
         assert(movies.size == 1)
     }
 
@@ -120,10 +131,7 @@ class MovieRepositoryImpTest {
 
         whenever(api.getTrendingMovies()).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = resultsDto.take(1),
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = resultsDto.take(1), totalPages = 1, totalResults = 0
             )
         )
 
@@ -147,10 +155,7 @@ class MovieRepositoryImpTest {
         val query = "movie"
         whenever(api.searchMovies(query)).thenReturn(
             ResultsDto(
-                page = 1,
-                resultDto = resultsDto,
-                totalPages = 1,
-                totalResults = 0
+                page = 1, resultDto = resultsDto, totalPages = 1, totalResults = 0
             )
         )
 
@@ -192,8 +197,7 @@ class MovieRepositoryImpTest {
                 video = true,
                 voteAverage = 1.0,
                 voteCount = 1,
-            ),
-            ResultDto(
+            ), ResultDto(
                 adult = true,
                 backdropPath = "backdropPath",
                 genreIds = listOf(1),
@@ -208,6 +212,19 @@ class MovieRepositoryImpTest {
                 video = true,
                 voteAverage = 2.0,
                 voteCount = 2,
+            )
+        )
+
+        val movieEntities = listOf(
+            MovieEntity(
+                id = 1,
+                overview = "overview",
+                popularity = 1.0,
+                voteAverage = 1.0,
+                posterPath = "posterPath",
+                releaseDate = "releaseDate",
+                title = "tile",
+                backDropPath = "backDropPath",
             )
         )
     }
