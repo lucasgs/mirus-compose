@@ -1,7 +1,13 @@
 package com.dendron.mirus.presentation.movie_search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
@@ -10,7 +16,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -34,8 +42,7 @@ fun MovieSearchScreen(
     modifier: Modifier = Modifier,
     viewModel: MovieSearchViewModel = hiltViewModel()
 ) {
-    var text by remember { mutableStateOf("") }
-    val state = viewModel.movies.collectAsStateWithLifecycle()
+    val state = viewModel.state.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -51,8 +58,7 @@ fun MovieSearchScreen(
     }
 
     fun searchMovie() {
-        viewModel.searchMovie(text)
-        text = ""
+        viewModel.searchMovie()
     }
 
     Box(
@@ -76,8 +82,8 @@ fun MovieSearchScreen(
                     placeholder = {
                         Text(text = "Search")
                     },
-                    value = text,
-                    onValueChange = { text = it },
+                    value = state.value.query,
+                    onValueChange = { viewModel.onQueryChanged(it) },
                     singleLine = true,
                     leadingIcon = {
                         Icon(
@@ -114,8 +120,6 @@ fun MovieSearchScreen(
                     title = "",
                     movies = state.value.movies,
                     showTitles = false,
-                    showFavoriteAction = false,
-                    onFavoriteClick = { },
                     onItemClick = { movieId ->
                         navigateToDetailScreen(movieId)
                     }

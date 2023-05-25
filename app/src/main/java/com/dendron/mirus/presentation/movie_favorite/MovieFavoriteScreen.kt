@@ -2,7 +2,11 @@ package com.dendron.mirus.presentation.movie_favorite
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.dendron.mirus.presentation.movie_list.MovieUiModel
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.movie_list.components.VerticalSection
 import com.dendron.mirus.presentation.navigation.Screen
@@ -35,10 +38,6 @@ fun MovieFavoriteScreen(
         }
     }
 
-    fun onFavoriteClick(model: MovieUiModel) {
-        viewModel.toggleMovieAsFavorite(model)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,10 +50,6 @@ fun MovieFavoriteScreen(
                 VerticalSection(title = "Favorites",
                     movies = state.value.movies,
                     showTitles = false,
-                    showFavoriteAction = false,
-                    onFavoriteClick = { model ->
-                        onFavoriteClick(model)
-                    },
                     onItemClick = { movieId ->
                         navigateToDetailScreen(movieId)
                     })

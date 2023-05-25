@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
-import com.dendron.mirus.domain.repository.FavoriteMovieStore
 import com.dendron.mirus.domain.repository.MovieRepository
 import com.dendron.mirus.local.DbFavoriteMovieRepository
-import com.dendron.mirus.local.SharedPreferencesFavoriteMovieStore
 import com.dendron.mirus.local.db.AppDatabase
 import com.dendron.mirus.remote.TheMovieDBApi
 import com.dendron.mirus.remote.TheMovieDbRepository
@@ -54,25 +52,6 @@ object AppModule {
 
         chain.proceed(newRequest)
     }
-
-    @Provides
-    @Singleton
-    fun provideFavoriteMovieStore(@ApplicationContext appContext: Context): FavoriteMovieStore {
-        return SharedPreferencesFavoriteMovieStore(
-            appContext.getSharedPreferences(
-                Constants.PREFERENCES_NAME,
-                Context.MODE_PRIVATE
-            )
-        )
-    }
-
-//    @Provides
-//    @Singleton
-//    fun provideLocalFavoriteMovieRepository(
-//        localStore: FavoriteMovieStore
-//    ): FavoriteMovieRepository {
-//        return LocalFavoriteMovieRepository(localStore)
-//    }
 
     @Provides
     @Singleton

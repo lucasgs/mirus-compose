@@ -1,7 +1,11 @@
 package com.dendron.mirus.presentation.movie_list
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -51,10 +55,6 @@ fun MovieListScreen(
         }
     }
 
-    fun onFavoriteClick(model: MovieUiModel) {
-        viewModel.toggleMovieAsFavorite(model)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,17 +64,14 @@ fun MovieListScreen(
         Column {
             TopRatedSection(
                 movies = topRatedState.value.movies,
-                onFavoriteClick = ::onFavoriteClick,
                 onNavigateToDetailScreen = ::navigateToDetailScreen
             )
             DiscoverySection(
                 movies = discoverState.value.movies,
-                onFavoriteClick = ::onFavoriteClick,
                 onNavigateToDetailScreen = ::navigateToDetailScreen
             )
             TrendingSection(
                 movies = trendingState.value.movies,
-                onFavoriteClick = ::onFavoriteClick,
                 onNavigateToDetailScreen = ::navigateToDetailScreen
             )
         }

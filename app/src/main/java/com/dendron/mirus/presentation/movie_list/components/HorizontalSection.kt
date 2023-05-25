@@ -7,29 +7,24 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.dendron.mirus.presentation.movie_list.MovieUiModel
+import com.dendron.mirus.domain.model.Movie
 
 @Composable
 fun HorizontalSection(
     title: String,
-    movies: List<MovieUiModel>,
+    movies: List<Movie>,
     modifier: Modifier = Modifier,
     rowCount: Int = 1,
-    showFavoriteAction: Boolean = true,
-    onFavoriteClick: (MovieUiModel) -> Unit,
     onItemClick: (Int) -> Unit
 ) {
     Box(modifier = modifier) {
         Column {
             SectionTitle(title = title)
             LazyHorizontalGrid(rows = GridCells.Fixed(rowCount)) {
-                items(movies) { model ->
-                    val movie = model.movie
+                items(movies) { movie ->
                     MovieListItem(
-                        model = model,
+                        movie = movie,
                         showTitles = false,
-                        showFavoriteAction = showFavoriteAction,
-                        onFavoriteClick = { onFavoriteClick(model) },
                         onItemClick = { onItemClick(movie.id) })
                 }
             }

@@ -1,9 +1,10 @@
 package com.dendron.mirus.presentation.movie_search
 
-import com.dendron.mirus.presentation.movie_list.MovieUiModel
+import com.dendron.mirus.domain.model.Movie
 
-class MovieSearchState(
+data class MovieSearchState(
     val isLoading: Boolean = false,
-    val movies: List<MovieUiModel> = emptyList(),
+    val movies: List<Movie> = emptyList(),
+    val query: String = "",
     val error: String = ""
 )

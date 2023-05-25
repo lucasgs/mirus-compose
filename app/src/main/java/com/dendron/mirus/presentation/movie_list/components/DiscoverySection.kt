@@ -4,12 +4,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.dendron.mirus.presentation.movie_list.MovieUiModel
+import com.dendron.mirus.domain.model.Movie
 
 @Composable
 fun DiscoverySection(
-    movies: List<MovieUiModel>,
-    onFavoriteClick: (MovieUiModel) -> Unit,
+    movies: List<Movie>,
     onNavigateToDetailScreen: (Int) -> Unit
 ) {
     EmptySpace(height = 16.dp)
@@ -17,8 +16,6 @@ fun DiscoverySection(
         title = "Discovery",
         movies = movies,
         modifier = Modifier.height(200.dp),
-        showFavoriteAction = false,
-        onFavoriteClick = { model -> onFavoriteClick(model) }
     ) { id ->
         onNavigateToDetailScreen(id)
     }
