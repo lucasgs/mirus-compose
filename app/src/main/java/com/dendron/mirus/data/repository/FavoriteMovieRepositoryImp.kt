@@ -1,19 +1,19 @@
-package com.dendron.mirus.local
+package com.dendron.mirus.data.repository
 
 import com.dendron.mirus.domain.model.Movie
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
-import com.dendron.mirus.local.db.AppDatabase
-import com.dendron.mirus.local.db.model.Favorite
+import com.dendron.mirus.data.local.AppDatabase
+import com.dendron.mirus.data.local.model.FavoriteEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
-class DbFavoriteMovieRepository(private val appDatabase: AppDatabase) : FavoriteMovieRepository {
+class FavoriteMovieRepositoryImp(private val appDatabase: AppDatabase) : FavoriteMovieRepository {
 
     override suspend fun saveFavoriteMovie(movie: Movie) {
         withContext(Dispatchers.IO) {
             appDatabase.favoriteDao().insert(
-                Favorite(
+                FavoriteEntity(
                     id = movie.id,
                     title = movie.title,
                     posterPath = movie.posterPath,

@@ -3,12 +3,12 @@ package com.dendron.mirus.di
 import android.content.Context
 import androidx.room.Room
 import com.dendron.mirus.common.Constants
+import com.dendron.mirus.data.local.AppDatabase
+import com.dendron.mirus.data.remote.TheMovieDBApi
+import com.dendron.mirus.data.repository.MovieRepositoryImp
+import com.dendron.mirus.data.repository.FavoriteMovieRepositoryImp
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.domain.repository.MovieRepository
-import com.dendron.mirus.local.DbFavoriteMovieRepository
-import com.dendron.mirus.local.db.AppDatabase
-import com.dendron.mirus.remote.TheMovieDBApi
-import com.dendron.mirus.remote.TheMovieDbRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,7 +58,7 @@ object AppModule {
     fun provideLocalFavoriteMovieRepository(
         appDatabase: AppDatabase
     ): FavoriteMovieRepository {
-        return DbFavoriteMovieRepository(appDatabase)
+        return FavoriteMovieRepositoryImp(appDatabase)
     }
 
     @Provides
@@ -66,7 +66,7 @@ object AppModule {
     fun provideMovieRepository(
         api: TheMovieDBApi
     ): MovieRepository {
-        return TheMovieDbRepository(api)
+        return MovieRepositoryImp(api)
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package com.dendron.mirus.remote.dto
+package com.dendron.mirus.data.local.remote.dto
 
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.domain.model.Genre

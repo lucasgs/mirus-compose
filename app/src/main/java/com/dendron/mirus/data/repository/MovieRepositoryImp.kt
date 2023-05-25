@@ -1,12 +1,13 @@
-package com.dendron.mirus.remote
+package com.dendron.mirus.data.repository
 
 import com.dendron.mirus.domain.model.Movie
 import com.dendron.mirus.domain.repository.MovieRepository
-import com.dendron.mirus.remote.dto.toMovie
-import com.dendron.mirus.remote.dto.toMovieDetail
+import com.dendron.mirus.data.remote.dto.toMovie
+import com.dendron.mirus.data.local.remote.dto.toMovieDetail
+import com.dendron.mirus.data.remote.TheMovieDBApi
 import javax.inject.Inject
 
-class TheMovieDbRepository @Inject constructor(
+class MovieRepositoryImp @Inject constructor(
     private val api: TheMovieDBApi,
 ) : MovieRepository {
 

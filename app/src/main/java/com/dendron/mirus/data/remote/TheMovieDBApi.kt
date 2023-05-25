@@ -1,8 +1,8 @@
-package com.dendron.mirus.remote
+package com.dendron.mirus.data.remote
 
-import com.dendron.mirus.remote.dto.ResultsDto
-import com.dendron.mirus.remote.dto.MovieDetailDto
-import com.dendron.mirus.remote.dto.ResultDto
+import com.dendron.mirus.data.local.remote.dto.ResultsDto
+import com.dendron.mirus.data.local.remote.dto.MovieDetailDto
+import com.dendron.mirus.data.remote.dto.ResultDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

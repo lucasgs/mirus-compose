@@ -1,9 +1,11 @@
 package com.dendron.mirus.remote
 
 import com.dendron.mirus.MainDispatcherRule
-import com.dendron.mirus.remote.dto.MovieDetailDto
-import com.dendron.mirus.remote.dto.ResultDto
-import com.dendron.mirus.remote.dto.ResultsDto
+import com.dendron.mirus.data.remote.TheMovieDBApi
+import com.dendron.mirus.data.repository.MovieRepositoryImp
+import com.dendron.mirus.data.local.remote.dto.MovieDetailDto
+import com.dendron.mirus.data.remote.dto.ResultDto
+import com.dendron.mirus.data.local.remote.dto.ResultsDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -17,7 +19,7 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class TheMovieDbRepositoryTest {
+class MovieRepositoryImpTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -25,11 +27,11 @@ class TheMovieDbRepositoryTest {
     @Mock
     private lateinit var api: TheMovieDBApi
 
-    private lateinit var theMovieDbRepository: TheMovieDbRepository
+    private lateinit var movieRepositoryImp: MovieRepositoryImp
 
     @Before
     fun setUp() {
-        theMovieDbRepository = TheMovieDbRepository(api)
+        movieRepositoryImp = MovieRepositoryImp(api)
     }
 
 
@@ -45,7 +47,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        theMovieDbRepository.getTopRatedMovies()
+        movieRepositoryImp.getTopRatedMovies()
         verify(api).getTopRatedMovies()
     }
 
@@ -61,7 +63,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        theMovieDbRepository.getDiscoverMovies()
+        movieRepositoryImp.getDiscoverMovies()
         verify(api).getDiscoverMovies()
     }
 
@@ -77,7 +79,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        theMovieDbRepository.getTrendingMovies()
+        movieRepositoryImp.getTrendingMovies()
         verify(api).getTrendingMovies()
     }
 
@@ -93,7 +95,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        val movies = theMovieDbRepository.getTopRatedMovies()
+        val movies = movieRepositoryImp.getTopRatedMovies()
         assert(movies.size == 2)
     }
 
@@ -109,7 +111,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        val movies = theMovieDbRepository.getDiscoverMovies()
+        val movies = movieRepositoryImp.getDiscoverMovies()
         assert(movies.size == 1)
     }
 
@@ -125,7 +127,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        val movies = theMovieDbRepository.getTrendingMovies()
+        val movies = movieRepositoryImp.getTrendingMovies()
         assert(movies.size == 1)
     }
 
@@ -135,7 +137,7 @@ class TheMovieDbRepositoryTest {
         val id = "1"
         whenever(api.getMovie(id)).thenReturn(movieDetailDto)
 
-        theMovieDbRepository.getMovieDetails(id)
+        movieRepositoryImp.getMovieDetails(id)
         verify(api).getMovie(id)
     }
 
@@ -152,7 +154,7 @@ class TheMovieDbRepositoryTest {
             )
         )
 
-        theMovieDbRepository.searchMovies(query)
+        movieRepositoryImp.searchMovies(query)
         verify(api).searchMovies(query)
     }
 

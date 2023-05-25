@@ -19,7 +19,7 @@ import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class ToggleMovieFavoriteUseCaseTest {
+class ToggleMovieFavoriteUseCaseTestEntity {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
