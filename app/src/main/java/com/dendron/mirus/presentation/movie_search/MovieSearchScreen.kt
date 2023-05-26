@@ -20,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ import com.dendron.mirus.presentation.navigation.Screen
 import com.dendron.mirus.presentation.ui.theme.MyPurple700
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MovieSearchScreen(
     navController: NavHostController,
@@ -46,6 +49,7 @@ fun MovieSearchScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = FocusRequester()
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -97,6 +101,7 @@ fun MovieSearchScreen(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
                         searchMovie()
+                        keyboardController?.hide()
                     }),
                     modifier = Modifier
                         .background(Color.White)
@@ -109,7 +114,7 @@ fun MovieSearchScreen(
                         .fillMaxSize()
                 ) {
                     Text(
-                        text = "Nothing to show yet :)",
+                        text = "Nothing to show :)",
                         color = Color.White,
                         modifier = Modifier
                             .align(Alignment.Center)

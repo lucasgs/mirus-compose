@@ -8,6 +8,7 @@ import com.dendron.mirus.domain.repository.MovieRepository
 import com.dendron.mirus.movies
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -47,10 +48,10 @@ class GetSearchMoviesUseCaseTest {
 
     @Test
     fun `invoke should return loading and success when the repository returns data`() = runTest {
-        val expectedLoading = Resource.Loading<Movie>()
-        val expectedSuccess = Resource.Success(data = movies.first())
+        val expectedLoading = Resource.Loading<List<Movie>>()
+        val expectedSuccess = Resource.Success(data = movies)
         whenever(movieRepository.searchMovies(QUERY)).thenReturn(
-            movies
+            flowOf(movies)
         )
 
         searchMoviesUseCase(QUERY).test {
@@ -63,8 +64,8 @@ class GetSearchMoviesUseCaseTest {
     @Test
     fun `invoke should return error when the repository returns httpexception`() = runTest {
         val expectedErrorMessage = "error"
-        val expectedLoading = Resource.Loading<Movie>()
-        val expectedError = Resource.Error<Movie>(message = expectedErrorMessage)
+        val expectedLoading = Resource.Loading<List<Movie>>()
+        val expectedError = Resource.Error<List<Movie>>(message = expectedErrorMessage)
         whenever(movieRepository.searchMovies(QUERY)).thenThrow(HttpException::class.java)
 
         searchMoviesUseCase(QUERY).test {
@@ -77,8 +78,8 @@ class GetSearchMoviesUseCaseTest {
     @Test
     fun `invoke should return error when the repository returns ioexception`() = runTest {
         val expectedErrorMessage = "error"
-        val expectedLoading = Resource.Loading<Movie>()
-        val expectedError = Resource.Error<Movie>(message = expectedErrorMessage)
+        val expectedLoading = Resource.Loading<List<Movie>>()
+        val expectedError = Resource.Error<List<Movie>>(message = expectedErrorMessage)
         whenever(movieRepository.searchMovies(QUERY)).thenAnswer {
             throw IOException()
         }
@@ -93,8 +94,8 @@ class GetSearchMoviesUseCaseTest {
     @Test
     fun `invoke should return error when the repository returns exception`() = runTest {
         val expectedErrorMessage = "error"
-        val expectedLoading = Resource.Loading<Movie>()
-        val expectedError = Resource.Error<Movie>(message = expectedErrorMessage)
+        val expectedLoading = Resource.Loading<List<Movie>>()
+        val expectedError = Resource.Error<List<Movie>>(message = expectedErrorMessage)
         whenever(movieRepository.searchMovies(QUERY)).thenAnswer {
             throw Exception(expectedErrorMessage)
         }

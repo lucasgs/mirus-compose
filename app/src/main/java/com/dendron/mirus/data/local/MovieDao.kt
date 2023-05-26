@@ -19,6 +19,9 @@ interface MovieDao {
     @Query("SELECT * FROM movie")
     fun getMovies(): Flow<List<MovieEntity>>
 
+    @Query("SELECT * FROM movie WHERE title LIKE '%' || :query || '%'")
+    fun searchMovies(query: String): Flow<List<MovieEntity>>
+
     @Transaction
     @Query("SELECT * FROM discovery")
     fun getDiscoveryMovies(): Flow<List<DiscoveryMovie>>
@@ -28,7 +31,6 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDiscovery(discoveryEntity: DiscoveryEntity)
-
 
     @Transaction
     @Query("SELECT * FROM top_rated")

@@ -109,9 +109,15 @@ class MovieRepositoryImp @Inject constructor(
         }
     }
 
-
-    override suspend fun searchMovies(query: String): List<Movie> {
-        return api.searchMovies(query).resultDto.map { it.toDomain() }
+    override suspend fun searchMovies(query: String): Flow<List<Movie>> = flow {
+//        return api.searchMovies(query).resultDto.map { it.toDomain() }
+        runCatching {
+            api.searchMovies(query).resultDto.map { it.toDomain() }
+        }.onFailure {
+            emitAll(movieDao.searchMovies(query).map { movies -> movies.map { movie -> movie.toDomain() } })
+        }.onSuccess {movies ->
+            emit(movies)
+        }
     }
 }
 
