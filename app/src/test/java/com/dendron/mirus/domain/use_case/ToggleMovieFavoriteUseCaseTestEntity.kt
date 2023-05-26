@@ -2,6 +2,7 @@ package com.dendron.mirus.domain.use_case
 
 import app.cash.turbine.test
 import com.dendron.mirus.MainDispatcherRule
+import com.dendron.mirus.common.Resource
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.movies
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,8 +49,9 @@ class ToggleMovieFavoriteUseCaseTestEntity {
 
     @Test
     fun `invoke should return error when the repository returns exception`() = runTest {
+        val expected = Resource.Success(true)
         toogleMovieFavoriteUseCase(movie, false).test {
-            assertEquals(true, awaitItem())
+            assertEquals(expected, awaitItem())
             awaitComplete()
         }
     }
