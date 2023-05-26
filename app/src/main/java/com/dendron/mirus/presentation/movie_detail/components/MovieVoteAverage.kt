@@ -11,9 +11,11 @@ import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dendron.mirus.R
 import com.dendron.mirus.presentation.ui.theme.Yellow
 
 @Composable
@@ -28,7 +30,7 @@ fun MovieVoteAverage(
             .padding(4.dp)
     ) {
         Icon(
-            Icons.Rounded.Star, tint = Yellow, contentDescription = "Rating"
+            Icons.Rounded.Star, tint = Yellow, contentDescription = stringResource(R.string.rating)
         )
         Text(
             text = voteAverage,

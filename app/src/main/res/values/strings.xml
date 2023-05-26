@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Mirus</string>
+    <string name="go_back">Go back</string>
+    <string name="favorite">Favorite</string>>
+    <string name="favorites">Favorites</string>>
+    <string name="rating">Rating</string>
+    <string name="discovery">Discovery</string>
+    <string name="top_rated">Top rated</string>
+    <string name="trending">Trending</string>
+    <string name="search">Search</string>
+    <string name="nothing_to_show">Nothing to show :)</string>
 </resources>

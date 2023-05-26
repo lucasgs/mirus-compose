@@ -11,9 +11,9 @@ import com.dendron.mirus.domain.model.Movie
 
 @Composable
 fun VerticalSection(
-    title: String,
-    movies: List<Movie>,
     modifier: Modifier = Modifier,
+    title: String = "",
+    movies: List<Movie>,
     showTitles: Boolean = true,
     onItemClick: (Int) -> Unit
 ) {

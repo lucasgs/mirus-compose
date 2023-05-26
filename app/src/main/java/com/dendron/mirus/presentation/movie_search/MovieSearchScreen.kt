@@ -26,12 +26,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.dendron.mirus.R
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.movie_list.components.VerticalSection
 import com.dendron.mirus.presentation.navigation.Screen
@@ -84,7 +86,7 @@ fun MovieSearchScreen(
             ) {
                 TextField(
                     placeholder = {
-                        Text(text = "Search")
+                        Text(text = stringResource(R.string.search))
                     },
                     value = state.value.query,
                     onValueChange = { viewModel.onQueryChanged(it) },
@@ -92,7 +94,7 @@ fun MovieSearchScreen(
                     leadingIcon = {
                         Icon(
                             Icons.Default.Search,
-                            contentDescription = "Search",
+                            contentDescription = stringResource(R.string.search),
                             tint = Color.Black,
                             modifier = Modifier
                                 .background(Color.Transparent)
@@ -114,7 +116,7 @@ fun MovieSearchScreen(
                         .fillMaxSize()
                 ) {
                     Text(
-                        text = "Nothing to show :)",
+                        text = stringResource(R.string.nothing_to_show),
                         color = Color.White,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -122,7 +124,6 @@ fun MovieSearchScreen(
                 }
             } else {
                 VerticalSection(
-                    title = "",
                     movies = state.value.movies,
                     showTitles = false,
                     onItemClick = { movieId ->
