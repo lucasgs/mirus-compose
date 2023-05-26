@@ -8,6 +8,7 @@ import com.dendron.mirus.domain.repository.MovieRepository
 import com.dendron.mirus.movies
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -16,7 +17,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -46,6 +49,10 @@ class GetMovieDetailsUseCaseTest {
         val expectedLoading = Resource.Loading<Movie>()
         val expectedSuccess = Resource.Success(data = movies.first())
 
+        whenever(movieRepository.getMovieDetails(any())).thenReturn(
+            flowOf(movies.first())
+        )
+
         getMovieDetailsUseCase(MOVIE_ID).test {
             assertEquals(expectedLoading, awaitItem())
             assertEquals(expectedSuccess, awaitItem())
@@ -57,6 +64,10 @@ class GetMovieDetailsUseCaseTest {
     fun `invoke should return error when the repository returns exception`() = runTest {
         val expectedLoading = Resource.Loading<Movie>()
         val expectedSuccess = Resource.Success<Movie?>(null)
+
+        whenever(movieRepository.getMovieDetails(any())).thenReturn(
+            flowOf(movies.first())
+        )
 
         getMovieDetailsUseCase(MOVIE_ID).test {
             assertEquals(expectedLoading, awaitItem())

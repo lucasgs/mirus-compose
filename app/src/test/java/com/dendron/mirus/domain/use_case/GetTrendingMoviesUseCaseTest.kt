@@ -8,6 +8,7 @@ import com.dendron.mirus.domain.repository.MovieRepository
 import com.dendron.mirus.movies
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -50,7 +51,7 @@ class GetTrendingMoviesUseCaseTest {
         val expectedLoading = Resource.Loading<Movie>()
         val expectedSuccess = Resource.Success(data = movies.first())
         whenever(movieRepository.getTrendingMovies()).thenReturn(
-            movies
+            flowOf(movies)
         )
 
         getTrendingMoviesUseCase().test {

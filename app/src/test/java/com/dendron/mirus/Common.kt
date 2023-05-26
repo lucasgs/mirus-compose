@@ -1,6 +1,5 @@
 package com.dendron.mirus
 
-import com.dendron.mirus.domain.model.Genre
 import com.dendron.mirus.domain.model.Movie
 
 val movies = listOf(
@@ -13,8 +12,6 @@ val movies = listOf(
         title = "title 1",
         backDropPath = "backDrop 1",
         voteAverage = 1.0,
-        genres = listOf(
-            Genre(id = 1, name = "Comedy")
-        )
+        genres = emptyList()
     )
 )

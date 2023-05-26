@@ -1,7 +1,6 @@
-package com.dendron.mirus.data.local.remote.dto
+package com.dendron.mirus.data.remote.dto
 
 import com.dendron.mirus.common.Constants
-import com.dendron.mirus.domain.model.Genre
 import com.dendron.mirus.domain.model.Movie
 import com.google.gson.annotations.SerializedName
 
@@ -46,13 +45,6 @@ fun MovieDetailDto.toMovieDetail(): Movie {
         releaseDate = releaseDate,
         title = title,
         backDropPath = "${Constants.TMDB_BACKDROP_IMAGE_BASE_URL}$backdropPath",
-        genres = genres?.map { it.toGenre() } ?: emptyList()
-    )
-}
-
-fun GenreDto.toGenre(): Genre {
-    return Genre(
-        id = id,
-        name = name,
+        genres = genres?.map { it.id } ?: emptyList()
     )
 }

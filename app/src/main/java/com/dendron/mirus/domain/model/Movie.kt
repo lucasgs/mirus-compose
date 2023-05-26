@@ -9,5 +9,5 @@ data class Movie(
     val title: String,
     val backDropPath: String,
     val voteAverage: Double,
-    val genres: List<Genre>,
+    val genres: List<Int>,
 )

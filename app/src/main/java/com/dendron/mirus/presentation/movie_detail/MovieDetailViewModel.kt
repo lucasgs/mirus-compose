@@ -5,12 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.common.Resource
+import com.dendron.mirus.domain.model.Genre
 import com.dendron.mirus.domain.use_case.GetFavoritesMovieUseCase
 import com.dendron.mirus.domain.use_case.GetMovieDetailsUseCase
+import com.dendron.mirus.domain.use_case.GetMovieGenresUseCase
 import com.dendron.mirus.domain.use_case.ToggleMovieFavoriteUseCase
 import com.dendron.mirus.presentation.movie_list.MovieUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,16 +28,22 @@ class MovieDetailViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val toggleMovieFavoriteUseCase: ToggleMovieFavoriteUseCase,
     private val getFavoriteMovieUseCase: GetFavoritesMovieUseCase,
+    private val getMovieGenresUseCase: GetMovieGenresUseCase,
 ) : ViewModel() {
     private val _favorites = MutableStateFlow<List<Int>>(emptyList())
+    private val _genres = MutableStateFlow<List<Genre>>(emptyList())
     private val _state = MutableStateFlow(MovieDetailState())
 
-    val state = combine(_state, _favorites) { movieDetail, favorites ->
+    val state = combine(_state, _favorites, _genres) { movieDetail, favorites, genres ->
         movieDetail.model?.movie?.let { movie ->
             val isFav = favorites.any { it == movie.id }
             MovieDetailState(
-                model = MovieUiModel(movie, isFav)
-            )
+                model = MovieUiModel(
+                    movie,
+                    isFav,
+                    movie.genres.map { genre -> genres.find { genre == it.id } ?: Genre(0, "") }
+                ))
+
         } ?: MovieDetailState(error = "Error loading details")
     }.stateIn(
         scope = viewModelScope,
@@ -40,6 +54,7 @@ class MovieDetailViewModel @Inject constructor(
     init {
         getFavoriteMovies()
         getMovieDetail()
+        getGenres()
     }
 
     fun toggleMovieAsFavorite(model: MovieUiModel) {
@@ -59,6 +74,20 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
+    private fun getGenres() {
+        viewModelScope.launch {
+            getMovieGenresUseCase().onEach { result ->
+                val genres = when (result) {
+                    is Resource.Error, is Resource.Loading -> emptyList<Genre>()
+                    is Resource.Success -> result.data
+                }
+                _genres.update {
+                    genres
+                }
+            }.launchIn(viewModelScope)
+        }
+    }
+
     private fun getMovieDetail() {
         savedStateHandle.get<String>(Constants.MOVIE_ID_KEY)?.let { movieId ->
             getMovies(movieId = movieId)
@@ -70,12 +99,15 @@ class MovieDetailViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     result.data.let { movie ->
-                        val model = MovieUiModel(movie = movie, false)
+                        val model =
+                            MovieUiModel(movie = movie, isFavorite = false, genres = emptyList())
                         _state.value = MovieDetailState(model = model)
                     }
                 }
+
                 is Resource.Error -> _state.value =
                     MovieDetailState(error = result.message ?: "An expected error occurred")
+
                 is Resource.Loading -> _state.value = MovieDetailState(isLoading = true)
             }
         }.launchIn(viewModelScope)

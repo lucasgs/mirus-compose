@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Favorite")
+@Entity(tableName = "favorite")
 data class FavoriteEntity(
     @PrimaryKey @ColumnInfo(name = "movie_id") val id: Int,
     @ColumnInfo(name = "movie_title") val title: String,

@@ -101,7 +101,8 @@ fun MovieDetailItem(
                         horizontal = 0.dp, vertical = 5.dp
                     )
             ) {
-                movie.genres.onEach { genre ->
+                model.genres.onEach { genre ->
+//                    movie.genres.onEach { genre ->
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))

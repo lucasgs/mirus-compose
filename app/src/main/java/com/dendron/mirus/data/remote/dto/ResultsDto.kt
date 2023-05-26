@@ -1,4 +1,4 @@
-package com.dendron.mirus.data.local.remote.dto
+package com.dendron.mirus.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 

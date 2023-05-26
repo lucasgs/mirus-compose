@@ -1,13 +1,18 @@
 package com.dendron.mirus.remote
 
 import com.dendron.mirus.MainDispatcherRule
-import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.local.MovieDao
+import com.dendron.mirus.data.local.model.DiscoveryEntity
+import com.dendron.mirus.data.local.model.DiscoveryMovie
 import com.dendron.mirus.data.local.model.MovieEntity
-import com.dendron.mirus.data.local.remote.dto.MovieDetailDto
-import com.dendron.mirus.data.local.remote.dto.ResultsDto
+import com.dendron.mirus.data.local.model.TopRatedEntity
+import com.dendron.mirus.data.local.model.TopRatedMovie
+import com.dendron.mirus.data.local.model.TrendingEntity
+import com.dendron.mirus.data.local.model.TrendingMovie
 import com.dendron.mirus.data.remote.TheMovieDBApi
+import com.dendron.mirus.data.remote.dto.MovieDetailDto
 import com.dendron.mirus.data.remote.dto.ResultDto
+import com.dendron.mirus.data.remote.dto.ResultsDto
 import com.dendron.mirus.data.repository.MovieRepositoryImp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -19,6 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -33,20 +39,13 @@ class MovieRepositoryImpTest {
     private lateinit var api: TheMovieDBApi
 
     @Mock
-    private lateinit var appDatabase: AppDatabase
-
-    @Mock
     private lateinit var movieDao: MovieDao
 
     private lateinit var movieRepositoryImp: MovieRepositoryImp
 
     @Before
     fun setUp() {
-        movieRepositoryImp = MovieRepositoryImp(api, appDatabase)
-
-        whenever(appDatabase.movieDao()).thenReturn(
-            movieDao
-        )
+        movieRepositoryImp = MovieRepositoryImp(api, movieDao)
     }
 
     @Test
@@ -58,8 +57,16 @@ class MovieRepositoryImpTest {
             )
         )
 
-        movieRepositoryImp.getTopRatedMovies()
+        whenever(movieDao.getTopRatedMovies()).thenReturn(
+            flowOf(
+                emptyList()
+            )
+        )
+
+        val result = movieRepositoryImp.getTopRatedMovies().first()
+        assert(result.isEmpty())
         verify(api).getTopRatedMovies()
+        verify(movieDao).getTopRatedMovies()
     }
 
     @Test
@@ -71,14 +78,16 @@ class MovieRepositoryImpTest {
             )
         )
 
-        whenever(appDatabase.movieDao().getMovies()).thenReturn(
+        whenever(movieDao.getDiscoveryMovies()).thenReturn(
             flowOf(
-                movieEntities
+                emptyList()
             )
         )
 
-        movieRepositoryImp.getDiscoverMovies().first()
+        val result = movieRepositoryImp.getDiscoverMovies().first()
+        assert(result.isEmpty())
         verify(api).getDiscoverMovies()
+        verify(movieDao).getDiscoveryMovies()
     }
 
     @Test
@@ -90,8 +99,16 @@ class MovieRepositoryImpTest {
             )
         )
 
-        movieRepositoryImp.getTrendingMovies()
+        whenever(movieDao.getTrendingMovies()).thenReturn(
+            flowOf(
+                emptyList()
+            )
+        )
+
+        val result = movieRepositoryImp.getTrendingMovies().first()
+        assert(result.isEmpty())
         verify(api).getTrendingMovies()
+        verify(movieDao).getTrendingMovies()
     }
 
     @Test
@@ -103,7 +120,13 @@ class MovieRepositoryImpTest {
             )
         )
 
-        val movies = movieRepositoryImp.getTopRatedMovies()
+        whenever(movieDao.getTopRatedMovies()).thenReturn(
+            flowOf(
+                topRatedMovies
+            )
+        )
+
+        val movies = movieRepositoryImp.getTopRatedMovies().first()
         assert(movies.size == 2)
     }
 
@@ -116,9 +139,9 @@ class MovieRepositoryImpTest {
             )
         )
 
-        whenever(appDatabase.movieDao().getMovies()).thenReturn(
+        whenever(movieDao.getDiscoveryMovies()).thenReturn(
             flowOf(
-                movieEntities
+                discoveryMovies.take(1)
             )
         )
 
@@ -135,7 +158,13 @@ class MovieRepositoryImpTest {
             )
         )
 
-        val movies = movieRepositoryImp.getTrendingMovies()
+        whenever(movieDao.getTrendingMovies()).thenReturn(
+            flowOf(
+                trendingMovies.take(1)
+            )
+        )
+
+        val movies = movieRepositoryImp.getTrendingMovies().first()
         assert(movies.size == 1)
     }
 
@@ -145,8 +174,14 @@ class MovieRepositoryImpTest {
         val id = "1"
         whenever(api.getMovie(id)).thenReturn(movieDetailDto)
 
-        movieRepositoryImp.getMovieDetails(id)
+        whenever(movieDao.getMovieDetail(id.toInt())).thenReturn(
+            movieEntities.first()
+        )
+
+        val result = movieRepositoryImp.getMovieDetails(id).first()
+        assert(result.id == movieDetailDto.id)
         verify(api).getMovie(id)
+        verify(movieDao).insertMovie(any())
     }
 
     @Test
@@ -159,7 +194,7 @@ class MovieRepositoryImpTest {
             )
         )
 
-        movieRepositoryImp.searchMovies(query)
+        movieRepositoryImp.searchMovies(query).first()
         verify(api).searchMovies(query)
     }
 
@@ -223,9 +258,69 @@ class MovieRepositoryImpTest {
                 voteAverage = 1.0,
                 posterPath = "posterPath",
                 releaseDate = "releaseDate",
-                title = "tile",
+                title = "title",
                 backDropPath = "backDropPath",
+                genreIds = "1,2"
+            ),
+            MovieEntity(
+                id = 2,
+                overview = "overview",
+                popularity = 2.0,
+                voteAverage = 2.0,
+                posterPath = "posterPath",
+                releaseDate = "releaseDate",
+                title = "title",
+                backDropPath = "backDropPath",
+                genreIds = "1,3"
             )
+        )
+
+        private val topRatedEntities = listOf(
+            TopRatedEntity(movieId = 1),
+            TopRatedEntity(movieId = 2)
+        )
+
+        val topRatedMovies = listOf(
+            TopRatedMovie(
+                topRatedEntity = topRatedEntities.first(),
+                movie = movieEntities.first()
+            ),
+            TopRatedMovie(
+                topRatedEntity = topRatedEntities[1],
+                movie = movieEntities[1]
+            )
+        )
+
+        private val trendingEntities = listOf(
+            TrendingEntity(movieId = 1),
+            TrendingEntity(movieId = 2)
+        )
+
+        val trendingMovies = listOf(
+            TrendingMovie(
+                trendingEntity = trendingEntities.first(),
+                movie = movieEntities.first()
+            ),
+            TrendingMovie(
+                trendingEntity = trendingEntities[1],
+                movie = movieEntities[1]
+            )
+        )
+
+        private val discoveryEntities = listOf(
+            DiscoveryEntity(movieId = 1),
+            DiscoveryEntity(movieId = 2)
+        )
+
+        val discoveryMovies = listOf(
+            DiscoveryMovie(
+                discoveryEntity = discoveryEntities.first(),
+                movie = movieEntities.first()
+            ),
+            DiscoveryMovie(
+                discoveryEntity = discoveryEntities[1],
+                movie = movieEntities[1]
+            ),
         )
     }
 }

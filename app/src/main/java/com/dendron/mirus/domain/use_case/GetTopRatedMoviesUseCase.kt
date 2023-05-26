@@ -4,23 +4,18 @@ import com.dendron.mirus.common.Resource
 import com.dendron.mirus.domain.model.Movie
 import com.dendron.mirus.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
-import java.io.IOException
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetTopRatedMoviesUseCase @Inject constructor(private val movieRepository: MovieRepository) {
     operator fun invoke(): Flow<Resource<List<Movie>>> = flow {
-        try {
+        runCatching {
             emit(Resource.Loading())
-            val movies = movieRepository.getTopRatedMovies()
-            emit(Resource.Success(movies))
-        } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage))
-        } catch (e: IOException) {
-            emit(Resource.Error(e.localizedMessage))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.localizedMessage))
+            emitAll(movieRepository.getTopRatedMovies().map { Resource.Success(it) })
+        }.onFailure {
+            emit(Resource.Error(it.localizedMessage))
         }
     }
 }

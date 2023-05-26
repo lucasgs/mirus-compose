@@ -6,8 +6,10 @@ import com.dendron.mirus.common.Constants
 import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.remote.TheMovieDBApi
 import com.dendron.mirus.data.repository.FavoriteMovieRepositoryImp
+import com.dendron.mirus.data.repository.GenreRepositoryImp
 import com.dendron.mirus.data.repository.MovieRepositoryImp
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
+import com.dendron.mirus.domain.repository.GenreRepository
 import com.dendron.mirus.domain.repository.MovieRepository
 import dagger.Module
 import dagger.Provides
@@ -66,7 +68,16 @@ object AppModule {
     fun provideMovieRepository(
         api: TheMovieDBApi, appDatabase: AppDatabase
     ): MovieRepository {
-        return MovieRepositoryImp(api, appDatabase)
+        return MovieRepositoryImp(api, appDatabase.movieDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideGenreRepository(
+        api: TheMovieDBApi,
+        appDatabase: AppDatabase
+    ): GenreRepository {
+        return GenreRepositoryImp(api, appDatabase.genreDao())
     }
 
     @Provides

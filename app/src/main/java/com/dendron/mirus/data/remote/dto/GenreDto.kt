@@ -1,6 +1,11 @@
-package com.dendron.mirus.data.local.remote.dto
+package com.dendron.mirus.data.remote.dto
 
-class GenreDto(
+
+import com.google.gson.annotations.SerializedName
+
+data class GenreDto(
+    @SerializedName("id")
     val id: Int,
+    @SerializedName("name")
     val name: String
 )
