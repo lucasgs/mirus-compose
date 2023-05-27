@@ -42,7 +42,6 @@ fun MovieDetailItem(
         modifier = modifier
             .fillMaxSize()
             .background(MyPurple700)
-
     ) {
         Box(
             modifier = Modifier.height(250.dp)
@@ -92,6 +91,7 @@ fun MovieDetailItem(
                 text = movie.title,
                 fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 color = Color.White,
+                modifier = Modifier.padding(4.dp)
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -109,7 +109,7 @@ fun MovieDetailItem(
                     ) {
                         Text(
                             text = genre.name,
-                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
                             color = Color.Gray,
                             modifier = Modifier.padding(5.dp)
                         )

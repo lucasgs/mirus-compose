@@ -31,7 +31,7 @@ fun BackButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
         Icon(
             Icons.Default.ArrowBack,
             contentDescription = stringResource(R.string.go_back),
-            tint = Color.Black,
+            tint = Color.White,
             modifier = Modifier.background(Color.Transparent)
         )
     }

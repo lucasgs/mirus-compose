@@ -37,7 +37,6 @@ import com.dendron.mirus.R
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.movie_list.components.VerticalSection
 import com.dendron.mirus.presentation.navigation.Screen
-import com.dendron.mirus.presentation.ui.theme.MyPurple700
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -70,7 +69,6 @@ fun MovieSearchScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MyPurple700)
             .padding(16.dp)
     ) {
         Column(

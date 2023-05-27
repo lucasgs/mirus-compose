@@ -1,16 +1,17 @@
 package com.dendron.mirus.presentation.navigation
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.dendron.mirus.presentation.ui.theme.MyPurple200
+import com.dendron.mirus.presentation.ui.theme.MyPurple700
 
 @Composable
 fun MainBottomNavigation(navController: NavHostController) {
@@ -20,9 +21,7 @@ fun MainBottomNavigation(navController: NavHostController) {
         Screen.FavoriteMovieScreen,
     )
     NavigationBar(
-        containerColor = MyPurple200,
-//        backgroundColor = MyPurple200,
-        contentColor = Color.White,
+        containerColor = MyPurple700,
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -35,10 +34,20 @@ fun MainBottomNavigation(navController: NavHostController) {
                 )
             },
                 alwaysShowLabel = true,
-                label = { Text(item.title, fontSize = 9.sp) },
+                label = {
+                    Text(
+                        item.title,
+                        fontSize = MaterialTheme.typography.labelSmall.fontSize
+                    )
+                },
                 selected = isCurrentRoute,
-//                selectedContentColor = Color.White,
-//                unselectedContentColor = Color.Gray,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedTextColor = Color.White,
+                    selectedIconColor = Color.White,
+                    unselectedIconColor = Color.Gray,
+                    unselectedTextColor = Color.Gray,
+                    indicatorColor = Color.Gray,
+                ),
                 onClick = {
                     navController.navigate(item.route) {
                         navController.graph.startDestinationRoute?.let { screen_route ->

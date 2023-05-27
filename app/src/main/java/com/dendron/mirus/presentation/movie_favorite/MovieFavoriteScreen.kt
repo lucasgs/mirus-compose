@@ -24,7 +24,6 @@ import com.dendron.mirus.R
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
 import com.dendron.mirus.presentation.movie_list.components.VerticalSection
 import com.dendron.mirus.presentation.navigation.Screen
-import com.dendron.mirus.presentation.ui.theme.MyPurple700
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,7 +42,6 @@ fun MovieFavoriteScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MyPurple700)
             .padding(4.dp)
     ) {
         AnimatedVisibility(visible = !state.value.isLoading) {
