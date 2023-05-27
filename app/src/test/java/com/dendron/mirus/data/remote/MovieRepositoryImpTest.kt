@@ -1,4 +1,4 @@
-package com.dendron.mirus.remote
+package com.dendron.mirus.data.remote
 
 import com.dendron.mirus.MainDispatcherRule
 import com.dendron.mirus.data.local.MovieDao
@@ -9,7 +9,6 @@ import com.dendron.mirus.data.local.model.TopRatedEntity
 import com.dendron.mirus.data.local.model.TopRatedMovie
 import com.dendron.mirus.data.local.model.TrendingEntity
 import com.dendron.mirus.data.local.model.TrendingMovie
-import com.dendron.mirus.data.remote.TheMovieDBApi
 import com.dendron.mirus.data.remote.dto.MovieDetailDto
 import com.dendron.mirus.data.remote.dto.ResultDto
 import com.dendron.mirus.data.remote.dto.ResultsDto
@@ -49,7 +48,7 @@ class MovieRepositoryImpTest {
     }
 
     @Test
-    fun `getTopRatedMovies should return emtpy data if api returns empty`() = runTest {
+    fun `getTopRatedMovies should return empty data if api returns empty`() = runTest {
 
         whenever(api.getTopRatedMovies()).thenReturn(
             ResultsDto(

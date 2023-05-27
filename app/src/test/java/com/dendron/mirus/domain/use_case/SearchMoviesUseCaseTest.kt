@@ -25,7 +25,7 @@ import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
-class GetSearchMoviesUseCaseTest {
+class SearchMoviesUseCaseTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
