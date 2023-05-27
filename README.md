@@ -1,11 +1,22 @@
 # MIRUS
-A movies app
 
-<img src="screenshots/movies.png" width="40%" /> <img src="screenshots/details.png" width="40%"  />
+Introducing Mirus, a feature-rich app that lets you explore and discover movies with ease. Built with clean code guidelines, Mirus is developed using Kotlin and follows the MVVM architecture pattern. With the power of Jetpack Compose, the app provides an intuitive user interface. Enjoy browsing through a vast collection of movies, accessing detailed information, and staying up-to-date with the latest releases. Mirus is designed to work seamlessly offline, allowing you to access your favorite movies even without an internet connection. Powered by Hilt for dependency injection and Coroutines for efficient asynchronous operations.
+
+<p>
+  <img src="screenshots/1.png" width="200" />
+  <img src="screenshots/2.png" width="200" />
+  <img src="screenshots/3.png" width="200" />
+  <img src="screenshots/4.png" width="200" />
+</p>
+Screenshots made with https://screenshots.pro
 
 ## Android Architecture Component
 
-[Architecture](https://github.com/googlesamples/android-architecture-components)
+[Architecture](https://developer.android.com/topic/architecture)
+
+[Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+[Offline first](https://developer.android.com/topic/architecture/data-layer/offline-first])
 
 [Kotlin](https://kotlinlang.org/)
 
@@ -17,7 +28,7 @@ A movies app
 
 ## Libraries
 
-- [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+- [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 
 - [Coroutines](https://kotlinlang.org/docs/reference/coroutines.html)
 
