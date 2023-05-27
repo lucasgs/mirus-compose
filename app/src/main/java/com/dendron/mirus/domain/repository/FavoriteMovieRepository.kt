@@ -7,5 +7,5 @@ interface FavoriteMovieRepository {
     suspend fun saveFavoriteMovie(movie: Movie)
     suspend fun removeFavoriteMovie(movie: Movie)
     suspend fun isFavoriteMovie(movie: Movie): Boolean
-    suspend fun getFavoritesMovie(): Flow<List<Movie>>
+    suspend fun getFavoriteMovies(): Flow<List<Movie>>
 }

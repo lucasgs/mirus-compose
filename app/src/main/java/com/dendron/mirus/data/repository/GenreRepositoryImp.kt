@@ -29,7 +29,7 @@ class GenreRepositoryImp @Inject constructor(
         emitAll(genreDao.getGenres().map { genres -> genres.map { genre -> genre.toDomain() } })
     }
 
-    override suspend fun syncMovieGenres() {
+    private suspend fun syncMovieGenres() {
         runCatching {
             api.getMovieGenres()
         }.onSuccess { result ->

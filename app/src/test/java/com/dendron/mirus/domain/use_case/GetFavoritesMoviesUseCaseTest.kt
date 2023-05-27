@@ -39,18 +39,18 @@ class GetFavoritesMoviesUseCaseTest {
 
     @Test
     fun `invoke should call repository to get discovery movies`() = runTest {
-        whenever(favoriteMovieRepository.getFavoritesMovie()).thenReturn(
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenReturn(
             flowOf(movies)
         )
         getFavoritesMovieUseCase.invoke().collect()
-        verify(favoriteMovieRepository).getFavoritesMovie()
+        verify(favoriteMovieRepository).getFavoriteMovies()
     }
 
     @Test
     fun `invoke should return loading and success when the repository returns data`() = runTest {
         val expected = movies
 
-        whenever(favoriteMovieRepository.getFavoritesMovie()).thenReturn(
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenReturn(
             flowOf(movies)
         )
 
@@ -62,7 +62,7 @@ class GetFavoritesMoviesUseCaseTest {
 
     @Test
     fun `invoke should return error when the repository returns httpexception`() = runTest {
-        whenever(favoriteMovieRepository.getFavoritesMovie()).thenThrow(HttpException::class.java)
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenThrow(HttpException::class.java)
 
         getFavoritesMovieUseCase().test {
             awaitError()
@@ -71,7 +71,7 @@ class GetFavoritesMoviesUseCaseTest {
 
     @Test
     fun `invoke should return error when the repository returns ioexception`() = runTest {
-        whenever(favoriteMovieRepository.getFavoritesMovie()).thenAnswer {
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenAnswer {
             throw IOException()
         }
 
@@ -83,7 +83,7 @@ class GetFavoritesMoviesUseCaseTest {
     @Test
     fun `invoke should return error when the repository returns exception`() = runTest {
         val expectedErrorMessage = "error"
-        whenever(favoriteMovieRepository.getFavoritesMovie()).thenAnswer {
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenAnswer {
             throw Exception(expectedErrorMessage)
         }
 

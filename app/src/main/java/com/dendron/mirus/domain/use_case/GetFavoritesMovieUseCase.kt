@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetFavoritesMovieUseCase @Inject constructor(private val favoriteMovieRepository: FavoriteMovieRepository) {
     operator fun invoke(): Flow<List<Movie>> = flow {
         emitAll(
-            favoriteMovieRepository.getFavoritesMovie()
+            favoriteMovieRepository.getFavoriteMovies()
         )
     }.flowOn(Dispatchers.IO)
 }

@@ -60,7 +60,7 @@ object AppModule {
     fun provideLocalFavoriteMovieRepository(
         appDatabase: AppDatabase
     ): FavoriteMovieRepository {
-        return FavoriteMovieRepositoryImp(appDatabase)
+        return FavoriteMovieRepositoryImp(appDatabase.favoriteDao())
     }
 
     @Provides
