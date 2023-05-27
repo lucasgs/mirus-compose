@@ -6,6 +6,7 @@ import com.dendron.mirus.data.remote.TheMovieDBApi
 import com.dendron.mirus.domain.model.Genre
 import com.dendron.mirus.domain.repository.GenreRepository
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -33,6 +34,8 @@ class GenreRepositoryImp @Inject constructor(
             api.getMovieGenres()
         }.onSuccess { result ->
             withContext(IO) {
+                val delete = async { genreDao.deleteAll() }
+                delete.join()
                 result.genreDtos.forEach { genre ->
                     genreDao.insertGenre(genre.toEntity())
                 }

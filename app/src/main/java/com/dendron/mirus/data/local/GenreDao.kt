@@ -18,4 +18,7 @@ interface GenreDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGenre(genreEntity: GenreEntity)
+
+    @Query("DELETE FROM genre")
+    fun deleteAll()
 }
