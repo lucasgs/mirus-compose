@@ -125,13 +125,9 @@ class GenreRepositoryImpTest {
 
         val favoriteMovies = listOf(
             FavoriteMovie(
-                favoriteEntity = FavoriteEntity(
-                    id = 1, movieId = 1
-                ), movie = movieEntities.first()
+                favoriteEntity = FavoriteEntity(movieId = 1), movie = movieEntities.first()
             ), FavoriteMovie(
-                favoriteEntity = FavoriteEntity(
-                    id = 2, movieId = 2
-                ), movie = movieEntities[1]
+                favoriteEntity = FavoriteEntity(movieId = 2), movie = movieEntities[1]
             )
 
         )
