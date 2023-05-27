@@ -1,9 +1,9 @@
 package com.dendron.mirus.presentation.navigation
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -19,15 +19,16 @@ fun MainBottomNavigation(navController: NavHostController) {
         Screen.SearchMovie,
         Screen.FavoriteMovieScreen,
     )
-    BottomNavigation(
-        backgroundColor = MyPurple200,
+    NavigationBar(
+        containerColor = MyPurple200,
+//        backgroundColor = MyPurple200,
         contentColor = Color.White,
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             val isCurrentRoute = currentRoute == item.route
-            BottomNavigationItem(icon = {
+            NavigationBarItem(icon = {
                 Icon(
                     item.icon,
                     contentDescription = item.title
@@ -36,8 +37,8 @@ fun MainBottomNavigation(navController: NavHostController) {
                 alwaysShowLabel = true,
                 label = { Text(item.title, fontSize = 9.sp) },
                 selected = isCurrentRoute,
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.Gray,
+//                selectedContentColor = Color.White,
+//                unselectedContentColor = Color.Gray,
                 onClick = {
                     navController.navigate(item.route) {
                         navController.graph.startDestinationRoute?.let { screen_route ->

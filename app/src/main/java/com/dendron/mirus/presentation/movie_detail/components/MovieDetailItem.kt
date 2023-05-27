@@ -3,8 +3,8 @@ package com.dendron.mirus.presentation.movie_detail.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -90,8 +90,8 @@ fun MovieDetailItem(
         ) {
             Text(
                 text = movie.title,
-                fontSize = MaterialTheme.typography.h5.fontSize,
-                color = Color.White
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                color = Color.White,
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -109,7 +109,7 @@ fun MovieDetailItem(
                     ) {
                         Text(
                             text = genre.name,
-                            fontSize = MaterialTheme.typography.body2.fontSize,
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                             color = Color.Gray,
                             modifier = Modifier.padding(5.dp)
                         )
@@ -138,7 +138,7 @@ fun MovieDetailItem(
             EmptySpace()
             Text(
                 text = movie.overview,
-                fontSize = MaterialTheme.typography.body2.fontSize,
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 lineHeight = 20.sp,
                 color = Color.Gray,
             )
