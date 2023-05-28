@@ -67,7 +67,6 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    //implementation 'androidx.compose.material:material:1.3.1'
 
     implementation("androidx.compose.material3:material3:$material3_version")
 
@@ -112,6 +111,8 @@ dependencies {
 
     // Turbine for testing flows
     testImplementation 'app.cash.turbine:turbine:0.12.1'
+
+    implementation 'androidx.compose.material3:material3-window-size-class:1.1.0'
 
 }
 

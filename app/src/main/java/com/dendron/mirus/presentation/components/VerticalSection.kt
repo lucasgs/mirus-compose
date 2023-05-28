@@ -1,4 +1,4 @@
-package com.dendron.mirus.presentation.movie_list.components
+package com.dendron.mirus.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,7 +7,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.dendron.mirus.domain.model.Movie
+import com.dendron.mirus.presentation.movie_list.components.MovieListItem
 
 @Composable
 fun VerticalSection(
@@ -20,7 +22,7 @@ fun VerticalSection(
     Column(modifier = modifier) {
         SectionTitle(title = title)
         LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
+            columns = GridCells.Adaptive(95.dp),
             modifier = Modifier.fillMaxSize()
         ) {
             items(movies) { movie ->

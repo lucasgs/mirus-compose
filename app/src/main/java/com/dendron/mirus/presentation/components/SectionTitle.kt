@@ -1,4 +1,4 @@
-package com.dendron.mirus.presentation.movie_list.components
+package com.dendron.mirus.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

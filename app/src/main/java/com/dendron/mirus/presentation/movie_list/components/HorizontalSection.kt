@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dendron.mirus.domain.model.Movie
+import com.dendron.mirus.presentation.components.SectionTitle
 
 @Composable
 fun HorizontalSection(

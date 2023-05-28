@@ -1,15 +1,23 @@
 package com.dendron.mirus.presentation.movie_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.PermanentDrawerSheet
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,16 +28,84 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.dendron.mirus.presentation.ContentType
 import com.dendron.mirus.presentation.components.rememberLifecycleEvent
+import com.dendron.mirus.presentation.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.presentation.movie_list.components.DiscoverySection
 import com.dendron.mirus.presentation.movie_list.components.TopRatedSection
 import com.dendron.mirus.presentation.movie_list.components.TrendingSection
+import com.dendron.mirus.presentation.movie_search.MovieSearchScreen
 import com.dendron.mirus.presentation.navigation.Screen
 import com.dendron.mirus.presentation.ui.theme.MyPurple700
 import kotlinx.coroutines.launch
 
 @Composable
 fun MovieListScreen(
+    navController: NavHostController,
+    contentType: ContentType,
+) {
+    if (contentType == ContentType.SINGLE_PANE) {
+        MovieListWrapper(navController = navController)
+    } else if (contentType == ContentType.DUAL_PANE) {
+        DrawerMenu(navController = navController)
+    }
+}
+
+@Composable
+fun DrawerMenu(navController: NavHostController) {
+    Box(
+        modifier = Modifier
+            .background(MyPurple700)
+            .padding(4.dp)
+    ) {
+
+        val items = listOf(
+            Screen.MovieListScreen,
+            Screen.SearchMovie,
+            Screen.FavoriteMovieScreen
+        )
+        val selectedItem = remember { mutableStateOf(items[0]) }
+
+        PermanentNavigationDrawer(
+            drawerContent = {
+                PermanentDrawerSheet(
+                    drawerContainerColor = MyPurple700,
+                    drawerContentColor = MyPurple700,
+                    windowInsets = WindowInsets(12.dp),
+                    modifier = Modifier
+                        .width(240.dp)
+                        .padding(top = 20.dp)
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        items.forEach { item ->
+                            NavigationDrawerItem(
+                                icon = { item.icon },
+                                label = { Text(item.title) },
+                                selected = item == selectedItem.value,
+                                onClick = {
+                                    selectedItem.value = item
+                                },
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                        }
+                    }
+                }
+            },
+            content = {
+                when (selectedItem.value) {
+                    Screen.MovieListScreen -> MovieListWrapper(navController = navController)
+                    Screen.FavoriteMovieScreen -> MovieFavoriteScreen(navController = navController)
+                    Screen.SearchMovie -> MovieSearchScreen(navController = navController)
+                    else -> Unit
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun MovieListWrapper(
     navController: NavController,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
@@ -54,7 +130,6 @@ fun MovieListScreen(
             navController.navigate(Screen.MovieDetailScreen.route + "/$movieId")
         }
     }
-
     Box(
         modifier = Modifier
             .fillMaxSize()

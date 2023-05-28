@@ -35,7 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.dendron.mirus.R
 import com.dendron.mirus.presentation.movie_list.components.EmptySpace
-import com.dendron.mirus.presentation.movie_list.components.VerticalSection
+import com.dendron.mirus.presentation.components.VerticalSection
 import com.dendron.mirus.presentation.navigation.Screen
 import kotlinx.coroutines.launch
 
@@ -93,7 +93,6 @@ fun MovieSearchScreen(
                         Icon(
                             Icons.Default.Search,
                             contentDescription = stringResource(R.string.search),
-                            tint = Color.Black,
                             modifier = Modifier
                                 .background(Color.Transparent)
                         )

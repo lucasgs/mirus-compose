@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dendron.mirus.common.Constants
+import com.dendron.mirus.presentation.ContentType
 import com.dendron.mirus.presentation.movie_detail.MovieDetailScreen
 import com.dendron.mirus.presentation.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.presentation.movie_list.MovieListScreen
@@ -22,7 +23,10 @@ import com.google.accompanist.navigation.animation.composable
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationGraph(
-    navController: NavHostController, paddingValues: PaddingValues, modifier: Modifier = Modifier
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+    contentType: ContentType,
+    modifier: Modifier = Modifier
 ) {
     AnimatedNavHost(
         navController = navController,
@@ -34,7 +38,7 @@ fun NavigationGraph(
         composable(
             route = Screen.MovieListScreen.route
         ) {
-            MovieListScreen(navController = navController)
+            MovieListScreen(navController = navController, contentType = contentType)
         }
 
         composable(
