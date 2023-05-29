@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.PermanentDrawerSheet
@@ -136,7 +138,10 @@ fun MovieListWrapper(
             .background(MyPurple700)
             .padding(4.dp)
     ) {
-        Column {
+        Column(
+           modifier = Modifier
+               .verticalScroll(rememberScrollState())
+        ) {
             TopRatedSection(
                 movies = topRatedState.value.movies,
                 onNavigateToDetailScreen = ::navigateToDetailScreen
