@@ -6,9 +6,11 @@ import com.dendron.mirus.common.Resource
 import com.dendron.mirus.domain.use_case.GetDiscoverMoviesUseCase
 import com.dendron.mirus.domain.use_case.GetTopRatedMoviesUseCase
 import com.dendron.mirus.domain.use_case.GetTrendingMoviesUseCase
+import com.dendron.mirus.domain.use_case.SyncMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -18,6 +20,7 @@ class MovieListViewModel @Inject constructor(
     getDiscoverMoviesUseCase: GetDiscoverMoviesUseCase,
     getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
     getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
+    val syncMoviesUseCase: SyncMoviesUseCase,
 ) : ViewModel() {
 
     val discoverMovies = getDiscoverMoviesUseCase().map { resource ->
@@ -31,7 +34,6 @@ class MovieListViewModel @Inject constructor(
         initialValue = MovieListState(isLoading = true),
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000)
     )
-
 
     val topRatedMovies = getTopRatedMoviesUseCase().map { resource ->
         when (resource) {
@@ -56,7 +58,6 @@ class MovieListViewModel @Inject constructor(
         initialValue = MovieListState(isLoading = true),
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000)
     )
-
 
     val isLoading =
         combine(
@@ -94,6 +95,11 @@ class MovieListViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000)
         )
 
-    fun refresh() {
+    init {
+        syncData()
+    }
+
+    private fun syncData() {
+        syncMoviesUseCase().launchIn(viewModelScope)
     }
 }

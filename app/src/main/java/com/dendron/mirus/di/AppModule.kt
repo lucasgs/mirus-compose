@@ -3,11 +3,13 @@ package com.dendron.mirus.di
 import android.content.Context
 import androidx.room.Room
 import com.dendron.mirus.common.Constants
+import com.dendron.mirus.data.device.AndroidNetworkChecker
 import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.remote.TheMovieDBApi
 import com.dendron.mirus.data.repository.FavoriteMovieRepositoryImp
 import com.dendron.mirus.data.repository.GenreRepositoryImp
 import com.dendron.mirus.data.repository.MovieRepositoryImp
+import com.dendron.mirus.domain.NetworkChecker
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.domain.repository.GenreRepository
 import com.dendron.mirus.domain.repository.MovieRepository
@@ -87,5 +89,11 @@ object AppModule {
             appContext,
             AppDatabase::class.java, Constants.DB_NAME
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkChecker(@ApplicationContext appContext: Context): NetworkChecker {
+        return AndroidNetworkChecker(appContext)
     }
 }

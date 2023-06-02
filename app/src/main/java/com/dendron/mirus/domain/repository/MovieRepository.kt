@@ -9,4 +9,5 @@ interface MovieRepository {
     suspend fun getTrendingMovies(): Flow<List<Movie>>
     suspend fun getMovieDetails(movieId: String): Flow<Movie>
     suspend fun searchMovies(query: String): Flow<List<Movie>>
+    suspend fun syncMovies()
 }

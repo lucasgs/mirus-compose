@@ -19,17 +19,15 @@ class GenreRepositoryImp @Inject constructor(
     private val genreDao: GenreDao
 ) :
     GenreRepository {
+
     override suspend fun getGenreDetails(genresId: List<Int>): Flow<List<Genre>> =
         genreDao.getGenres().map { genres -> genres.map { genre -> genre.toDomain() } }
 
     override suspend fun getGenres(): Flow<List<Genre>> = flow {
-        withContext(IO) {
-            syncMovieGenres()
-        }
         emitAll(genreDao.getGenres().map { genres -> genres.map { genre -> genre.toDomain() } })
     }
 
-    private suspend fun syncMovieGenres() {
+    override suspend fun syncMovieGenres() {
         runCatching {
             api.getMovieGenres()
         }.onSuccess { result ->

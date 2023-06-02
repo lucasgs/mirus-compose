@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface GenreRepository {
     suspend fun getGenreDetails(genresId: List<Int>): Flow<List<Genre>>
     suspend fun getGenres(): Flow<List<Genre>>
+    suspend fun syncMovieGenres()
 }

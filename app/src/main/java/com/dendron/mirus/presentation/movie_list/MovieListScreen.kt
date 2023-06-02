@@ -17,7 +17,6 @@ import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,12 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.dendron.mirus.presentation.ContentType
-import com.dendron.mirus.presentation.components.rememberLifecycleEvent
 import com.dendron.mirus.presentation.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.presentation.movie_list.components.DiscoverySection
 import com.dendron.mirus.presentation.movie_list.components.TopRatedSection
@@ -63,53 +60,46 @@ fun DrawerMenu(navController: NavHostController) {
     ) {
 
         val items = listOf(
-            Screen.MovieListScreen,
-            Screen.SearchMovie,
-            Screen.FavoriteMovieScreen
+            Screen.MovieListScreen, Screen.SearchMovie, Screen.FavoriteMovieScreen
         )
         val selectedItem = remember { mutableStateOf(items[0]) }
 
-        PermanentNavigationDrawer(
-            drawerContent = {
-                PermanentDrawerSheet(
-                    drawerContainerColor = MyPurple700,
-                    drawerContentColor = MyPurple700,
-                    windowInsets = WindowInsets(12.dp),
-                    modifier = Modifier
-                        .width(240.dp)
-                        .padding(top = 20.dp)
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        items.forEach { item ->
-                            NavigationDrawerItem(
-                                icon = { item.icon },
-                                label = { Text(item.title) },
-                                selected = item == selectedItem.value,
-                                onClick = {
-                                    selectedItem.value = item
-                                },
-                                modifier = Modifier.padding(horizontal = 12.dp)
-                            )
-                        }
+        PermanentNavigationDrawer(drawerContent = {
+            PermanentDrawerSheet(
+                drawerContainerColor = MyPurple700,
+                drawerContentColor = MyPurple700,
+                windowInsets = WindowInsets(12.dp),
+                modifier = Modifier
+                    .width(240.dp)
+                    .padding(top = 20.dp)
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    items.forEach { item ->
+                        NavigationDrawerItem(icon = { item.icon },
+                            label = { Text(item.title) },
+                            selected = item == selectedItem.value,
+                            onClick = {
+                                selectedItem.value = item
+                            },
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
                     }
                 }
-            },
-            content = {
-                when (selectedItem.value) {
-                    Screen.MovieListScreen -> MovieListWrapper(navController = navController)
-                    Screen.FavoriteMovieScreen -> MovieFavoriteScreen(navController = navController)
-                    Screen.SearchMovie -> MovieSearchScreen(navController = navController)
-                    else -> Unit
-                }
             }
-        )
+        }, content = {
+            when (selectedItem.value) {
+                Screen.MovieListScreen -> MovieListWrapper(navController = navController)
+                Screen.FavoriteMovieScreen -> MovieFavoriteScreen(navController = navController)
+                Screen.SearchMovie -> MovieSearchScreen(navController = navController)
+                else -> Unit
+            }
+        })
     }
 }
 
 @Composable
 fun MovieListWrapper(
-    navController: NavController,
-    viewModel: MovieListViewModel = hiltViewModel()
+    navController: NavController, viewModel: MovieListViewModel = hiltViewModel()
 ) {
     val discoverState = viewModel.discoverMovies.collectAsStateWithLifecycle()
     val topRatedState = viewModel.topRatedMovies.collectAsStateWithLifecycle()
@@ -118,14 +108,6 @@ fun MovieListWrapper(
     val isError = viewModel.isError.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
-
-    val lifecycleEvent = rememberLifecycleEvent()
-
-    LaunchedEffect(lifecycleEvent) {
-        if (lifecycleEvent == Lifecycle.Event.ON_RESUME) {
-            viewModel.refresh()
-        }
-    }
 
     fun navigateToDetailScreen(movieId: Int) {
         coroutineScope.launch {
@@ -139,8 +121,7 @@ fun MovieListWrapper(
             .padding(4.dp)
     ) {
         Column(
-           modifier = Modifier
-               .verticalScroll(rememberScrollState())
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             TopRatedSection(
                 movies = topRatedState.value.movies,
@@ -169,8 +150,7 @@ fun MovieListWrapper(
         }
         if (isLoading.value) {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }
