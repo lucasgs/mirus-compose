@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class GetMovieDetailsUseCase @Inject constructor(private val movieRepository: MovieRepository) {
     operator fun invoke(movieId: String): Flow<Resource<Movie>> = flow {
-        kotlin.runCatching {
+        runCatching {
             emit(Resource.Loading())
             emitAll(movieRepository.getMovieDetails(movieId).map { Resource.Success(it) })
         }.onFailure {

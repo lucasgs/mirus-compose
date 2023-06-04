@@ -70,7 +70,7 @@ object AppModule {
     fun provideMovieRepository(
         api: TheMovieDBApi, appDatabase: AppDatabase
     ): MovieRepository {
-        return MovieRepositoryImp(api, appDatabase.movieDao())
+        return MovieRepositoryImp(api, appDatabase)
     }
 
     @Provides
@@ -79,7 +79,7 @@ object AppModule {
         api: TheMovieDBApi,
         appDatabase: AppDatabase
     ): GenreRepository {
-        return GenreRepositoryImp(api, appDatabase.genreDao())
+        return GenreRepositoryImp(api, appDatabase)
     }
 
     @Provides

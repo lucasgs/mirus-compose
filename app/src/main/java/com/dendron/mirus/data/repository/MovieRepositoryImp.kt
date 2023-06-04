@@ -1,7 +1,8 @@
 package com.dendron.mirus.data.repository
 
+import androidx.room.withTransaction
 import com.dendron.mirus.common.Constants
-import com.dendron.mirus.data.local.MovieDao
+import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.local.model.DiscoveryEntity
 import com.dendron.mirus.data.local.model.GenreEntity
 import com.dendron.mirus.data.local.model.MovieEntity
@@ -22,11 +23,12 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MovieRepositoryImp @Inject constructor(
-    private val api: TheMovieDBApi, private val movieDao: MovieDao
+    private val api: TheMovieDBApi,
+    private val appDatabase: AppDatabase
 ) : MovieRepository {
 
     override suspend fun getDiscoverMovies(): Flow<List<Movie>> = flow {
-        emitAll(movieDao.getDiscoveryMovies()
+        emitAll(appDatabase.movieDao().getDiscoveryMovies()
             .map { it.map { item -> item.movie.toDomain() } })
     }
 
@@ -43,18 +45,22 @@ class MovieRepositoryImp @Inject constructor(
             api.getDiscoverMovies().resultDto.map { it.toDomain() }
         }.onSuccess { currentMovies ->
             currentMovies.forEach { movie ->
-                movieDao.insertMovie(movie.toEntity())
-                movieDao.insertDiscovery(
-                    DiscoveryEntity(
-                        movieId = movie.id
-                    )
-                )
+                appDatabase.withTransaction {
+                    appDatabase.movieDao().run {
+                        insertMovie(movie.toEntity())
+                        insertDiscovery(
+                            DiscoveryEntity(
+                                movieId = movie.id
+                            )
+                        )
+                    }
+                }
             }
         }
     }
 
     override suspend fun getTopRatedMovies(): Flow<List<Movie>> = flow {
-        emitAll(movieDao.getTopRatedMovies()
+        emitAll(appDatabase.movieDao().getTopRatedMovies()
             .map { it.map { item -> item.movie.toDomain() } })
     }
 
@@ -63,12 +69,16 @@ class MovieRepositoryImp @Inject constructor(
             api.getTopRatedMovies().resultDto.map { it.toDomain() }
         }.onSuccess { currentMovies ->
             currentMovies.forEach { movie ->
-                movieDao.insertMovie(movie.toEntity())
-                movieDao.insertTopRated(
-                    TopRatedEntity(
-                        movieId = movie.id
-                    )
-                )
+                appDatabase.withTransaction {
+                    appDatabase.movieDao().run {
+                        insertMovie(movie.toEntity())
+                        insertTopRated(
+                            TopRatedEntity(
+                                movieId = movie.id
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -78,24 +88,28 @@ class MovieRepositoryImp @Inject constructor(
             api.getTrendingMovies().resultDto.map { it.toDomain() }
         }.onSuccess { currentMovies ->
             currentMovies.forEach { movie ->
-                movieDao.insertMovie(movie.toEntity())
-                movieDao.insertTrending(
-                    TrendingEntity(
-                        movieId = movie.id
-                    )
-                )
+                appDatabase.withTransaction {
+                    appDatabase.movieDao().run {
+                        insertMovie(movie.toEntity())
+                        insertTrending(
+                            TrendingEntity(
+                                movieId = movie.id
+                            )
+                        )
+                    }
+                }
             }
         }
     }
 
     override suspend fun getTrendingMovies(): Flow<List<Movie>> = flow {
-        emitAll(movieDao.getTrendingMovies()
+        emitAll(appDatabase.movieDao().getTrendingMovies()
             .map { it.map { item -> item.movie.toDomain() } })
     }
 
     override suspend fun getMovieDetails(movieId: String): Flow<Movie> = flow {
         syncMovieDetails(movieId)
-        emit(movieDao.getMovieDetail(movieId.toInt()).toDomain())
+        emit(appDatabase.movieDao().getMovieDetail(movieId.toInt()).toDomain())
     }
 
     private suspend fun syncMovieDetails(movieId: String) {
@@ -103,7 +117,7 @@ class MovieRepositoryImp @Inject constructor(
             api.getMovie(movieId).toMovieDetail()
         }.onSuccess { movie ->
             withContext(Dispatchers.IO) {
-                movieDao.insertMovie(movie.toEntity())
+                appDatabase.movieDao().insertMovie(movie.toEntity())
             }
         }
     }
@@ -113,7 +127,7 @@ class MovieRepositoryImp @Inject constructor(
             api.searchMovies(query).resultDto.map { it.toDomain() }
         }.onFailure {
             emitAll(
-                movieDao.searchMovies(query)
+                appDatabase.movieDao().searchMovies(query)
                     .map { movies -> movies.map { movie -> movie.toDomain() } })
         }.onSuccess { movies ->
             emit(movies)
