@@ -18,6 +18,7 @@ class SyncMoviesUseCase @Inject constructor(
             if (networkChecker.isOnline()) {
                 movieRepository.syncMovies()
                 genreRepository.syncMovieGenres()
+                emit(Resource.Success(true))
             }
         }.onFailure {
             emit(Resource.Error(it.localizedMessage))
