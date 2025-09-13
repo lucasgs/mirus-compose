@@ -119,7 +119,7 @@ fun MovieDetailItem(
                         Text(
                             text = genre.name,
                             fontSize = MaterialTheme.typography.labelSmall.fontSize,
-                            color = Color.Gray,
+                            color = Color.LightGray,
                             modifier = Modifier.padding(5.dp)
                         )
                     }
