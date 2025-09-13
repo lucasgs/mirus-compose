@@ -13,10 +13,10 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.dendron.mirus.presentation.navigation.MainBottomNavigation
-import com.dendron.mirus.presentation.navigation.NavigationGraph
-import com.dendron.mirus.presentation.navigation.Screen
-import com.dendron.mirus.presentation.ui.theme.MirusTheme
+import com.dendron.mirus.ui.navigation.MainBottomNavigation
+import com.dendron.mirus.ui.navigation.NavigationGraph
+import com.dendron.mirus.ui.navigation.Screen
+import com.dendron.mirus.ui.theme.MirusTheme
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 
