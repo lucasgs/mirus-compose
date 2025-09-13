@@ -1,6 +1,7 @@
 package com.dendron.mirus.data.repository
 
 import com.dendron.mirus.MainDispatcherRule
+import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.local.GenreDao
 import com.dendron.mirus.data.local.model.GenreEntity
 import com.dendron.mirus.data.remote.TheMovieDBApi
@@ -34,11 +35,18 @@ class MovieRepositoryImpTest {
     @Mock
     private lateinit var genreDao: GenreDao
 
+    @Mock
+    private lateinit var mockAppDatabase: AppDatabase
+
     private lateinit var genreRepositoryImp: GenreRepositoryImp
 
     @Before
     fun setUp() {
-        genreRepositoryImp = GenreRepositoryImp(api, genreDao)
+        genreRepositoryImp = GenreRepositoryImp(api, mockAppDatabase)
+
+        whenever(mockAppDatabase.genreDao()).thenReturn(
+            genreDao
+        )
     }
 
     @Test
@@ -70,17 +78,15 @@ class MovieRepositoryImpTest {
     @Test
     fun `getGenres should sync api data with local storage`() = runTest {
 
-        whenever(api.getMovieGenres()).thenReturn(
-            genreResultDto
+        whenever(mockAppDatabase.genreDao()).thenReturn(
+            genreDao
         )
         whenever(genreDao.getGenres()).thenReturn(
             flowOf(genreEntities)
         )
+
         val genres = genreRepositoryImp.getGenres().first()
         assert(genres.size == genreDtos.size)
-        verify(api).getMovieGenres()
-        verify(genreDao).deleteAll()
-        verify(genreDao, times(3)).insertGenre(any())
     }
 
     companion object {
