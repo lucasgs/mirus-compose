@@ -4,10 +4,10 @@ import com.dendron.mirus.domain.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
-    suspend fun getDiscoverMovies(): Flow<List<Movie>>
-    suspend fun getTopRatedMovies(): Flow<List<Movie>>
-    suspend fun getTrendingMovies(): Flow<List<Movie>>
-    suspend fun getMovieDetails(movieId: String): Flow<Movie>
-    suspend fun searchMovies(query: String): Flow<List<Movie>>
+    fun getDiscoverMovies(): Flow<List<Movie>>
+    fun getTopRatedMovies(): Flow<List<Movie>>
+    fun getTrendingMovies(): Flow<List<Movie>>
+    fun getMovieDetails(movieId: String): Flow<Movie>
+    fun searchMovies(query: String): Flow<List<Movie>>
     suspend fun syncMovies()
 }

@@ -27,10 +27,9 @@ class MovieRepositoryImp @Inject constructor(
     private val appDatabase: AppDatabase
 ) : MovieRepository {
 
-    override suspend fun getDiscoverMovies(): Flow<List<Movie>> = flow {
-        emitAll(appDatabase.movieDao().getDiscoveryMovies()
-            .map { it.map { item -> item.movie.toDomain() } })
-    }
+    override fun getDiscoverMovies(): Flow<List<Movie>> =
+        appDatabase.movieDao().getDiscoveryMovies()
+            .map { movies -> movies.map { item -> item.movie.toDomain() } }
 
     override suspend fun syncMovies() {
         withContext(Dispatchers.IO) {
@@ -54,10 +53,9 @@ class MovieRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getTopRatedMovies(): Flow<List<Movie>> = flow {
-        emitAll(appDatabase.movieDao().getTopRatedMovies()
-            .map { it.map { item -> item.movie.toDomain() } })
-    }
+    override fun getTopRatedMovies(): Flow<List<Movie>> =
+        appDatabase.movieDao().getTopRatedMovies()
+            .map { movies -> movies.map { item -> item.movie.toDomain() } }
 
     private suspend fun syncTopRatedMovies() {
         runCatching {
@@ -87,12 +85,11 @@ class MovieRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun getTrendingMovies(): Flow<List<Movie>> = flow {
-        emitAll(appDatabase.movieDao().getTrendingMovies()
-            .map { it.map { item -> item.movie.toDomain() } })
-    }
+    override fun getTrendingMovies(): Flow<List<Movie>> =
+        appDatabase.movieDao().getTrendingMovies()
+            .map { movies -> movies.map { item -> item.movie.toDomain() } }
 
-    override suspend fun getMovieDetails(movieId: String): Flow<Movie> = flow {
+    override fun getMovieDetails(movieId: String): Flow<Movie> = flow {
         syncMovieDetails(movieId)
         emit(appDatabase.movieDao().getMovieDetail(movieId.toInt()).toDomain())
     }
@@ -107,13 +104,14 @@ class MovieRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun searchMovies(query: String): Flow<List<Movie>> = flow {
+    override fun searchMovies(query: String): Flow<List<Movie>> = flow {
         runCatching {
             api.searchMovies(query).resultDto.map { it.toDomain() }
         }.onFailure {
             emitAll(
                 appDatabase.movieDao().searchMovies(query)
-                    .map { movies -> movies.map { movie -> movie.toDomain() } })
+                    .map { movies -> movies.map { movie -> movie.toDomain() } }
+            )
         }.onSuccess { movies ->
             emit(movies)
         }

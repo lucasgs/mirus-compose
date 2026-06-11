@@ -61,8 +61,20 @@ class MovieDetailViewModel @Inject constructor(
 
     private fun observeFavoriteMovies() {
         getFavoriteMovieUseCase().onEach { result ->
-            _favoriteIds.value = result.map { movie -> movie.id }.toSet()
-            syncDerivedState()
+            when (result) {
+                is Resource.Success -> {
+                    _favoriteIds.value = result.data.map { movie -> movie.id }.toSet()
+                    syncDerivedState()
+                }
+
+                is Resource.Error -> {
+                    _state.update { currentState ->
+                        currentState.copy(error = result.message ?: "An expected error occurred")
+                    }
+                }
+
+                is Resource.Loading -> Unit
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -91,22 +103,15 @@ class MovieDetailViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         val movie = result.data
-                        if (movie != null) {
-                            _state.value = MovieDetailState(
-                                isLoading = false,
-                                model = MovieUiModel(
-                                    movie = movie,
-                                    isFavorite = _favoriteIds.value.contains(movie.id),
-                                    genres = movie.genres.mapGenreModels()
-                                ),
-                                error = ""
-                            )
-                        } else {
-                            _state.value = MovieDetailState(
-                                isLoading = false,
-                                error = "Error loading details"
-                            )
-                        }
+                        _state.value = MovieDetailState(
+                            isLoading = false,
+                            model = MovieUiModel(
+                                movie = movie,
+                                isFavorite = _favoriteIds.value.contains(movie.id),
+                                genres = movie.genres.mapGenreModels()
+                            ),
+                            error = ""
+                        )
                     }
 
                     is Resource.Error -> {

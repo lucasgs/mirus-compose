@@ -27,7 +27,7 @@ class FavoriteMovieRepositoryImp(private val favoriteDao: FavoriteDao) : Favorit
         }
     }
 
-    override suspend fun getFavoriteMovies(): Flow<List<Movie>> =
+    override fun getFavoriteMovies(): Flow<List<Movie>> =
         favoriteDao.getFavorites().map { favorites ->
             favorites.map { it.movie.toDomain() }
         }

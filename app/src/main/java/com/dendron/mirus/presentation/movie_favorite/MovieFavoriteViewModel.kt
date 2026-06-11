@@ -2,6 +2,7 @@ package com.dendron.mirus.presentation.movie_favorite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dendron.mirus.common.Resource
 import com.dendron.mirus.domain.use_case.GetFavoritesMovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,9 +16,11 @@ class MovieFavoriteViewModel @Inject constructor(
 ) : ViewModel() {
 
     val movies = getFavoriteMovieUseCase().map { result ->
-        MovieFavoriteState(
-            movies = result
-        )
+        when (result) {
+            is Resource.Success -> MovieFavoriteState(movies = result.data)
+            is Resource.Error -> MovieFavoriteState(error = result.message.orEmpty())
+            is Resource.Loading -> MovieFavoriteState(isLoading = true)
+        }
     }.stateIn(
         scope = viewModelScope,
         initialValue = MovieFavoriteState(),

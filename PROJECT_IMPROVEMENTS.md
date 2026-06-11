@@ -86,10 +86,15 @@
 - `app/src/main/java/com/dendron/mirus/domain/repository/MovieRepository.kt`
 - entire `app/src/main/java/com/dendron/mirus/...` tree
 
+**Progress:**
+- Removed unnecessary `suspend` from repository APIs that return `Flow`
+- Standardized favorites loading on the shared `Resource` result model used by the other use cases
+- Tightened `GenreRepository.getGenreDetails()` to honor the requested ids instead of returning all genres
+
 **Checklist:**
 - [ ] Split into modules like `app`, `core`, `domain`, `data`, `presentation/design-system`
-- [ ] Remove unnecessary `suspend` from repository methods returning `Flow`
-- [ ] Standardize on a single result/error model across use cases
+- [x] Remove unnecessary `suspend` from repository methods returning `Flow`
+- [x] Standardize on a single result/error model across use cases
 
 ### 6. Improve UI scalability
 **Why:** The movie list screen uses a vertically scrolling `Column`, which is less scalable for larger datasets.
