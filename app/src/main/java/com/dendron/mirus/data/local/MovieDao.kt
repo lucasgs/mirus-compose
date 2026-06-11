@@ -1,10 +1,9 @@
 package com.dendron.mirus.data.local
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import com.dendron.mirus.data.local.model.DiscoveryEntity
 import com.dendron.mirus.data.local.model.DiscoveryMovie
 import com.dendron.mirus.data.local.model.MovieEntity
@@ -26,28 +25,40 @@ interface MovieDao {
     @Query("SELECT * FROM discovery")
     fun getDiscoveryMovies(): Flow<List<DiscoveryMovie>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movieEntity: MovieEntity)
+    @Upsert
+    suspend fun upsertMovie(movieEntity: MovieEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertDiscovery(discoveryEntity: DiscoveryEntity)
+    @Upsert
+    suspend fun upsertMovies(movieEntities: List<MovieEntity>)
+
+    @Upsert
+    suspend fun upsertDiscovery(discoveryEntities: List<DiscoveryEntity>)
+
+    @Query("DELETE FROM discovery")
+    suspend fun clearDiscovery()
 
     @Transaction
     @Query("SELECT * FROM top_rated")
     fun getTopRatedMovies(): Flow<List<TopRatedMovie>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTopRated(topRatedEntity: TopRatedEntity)
+    @Upsert
+    suspend fun upsertTopRated(topRatedEntities: List<TopRatedEntity>)
+
+    @Query("DELETE FROM top_rated")
+    suspend fun clearTopRated()
 
     @Transaction
     @Query("SELECT * FROM trending")
     fun getTrendingMovies(): Flow<List<TrendingMovie>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTrending(trendingEntity: TrendingEntity)
+    @Upsert
+    suspend fun upsertTrending(trendingEntities: List<TrendingEntity>)
+
+    @Query("DELETE FROM trending")
+    suspend fun clearTrending()
 
     @Query("DELETE FROM movie WHERE id = :movieId")
-    fun delete(movieId: Int)
+    suspend fun delete(movieId: Int)
 
     @Query("SELECT * FROM movie WHERE id = :movieId")
     suspend fun getMovieDetail(movieId: Int): MovieEntity

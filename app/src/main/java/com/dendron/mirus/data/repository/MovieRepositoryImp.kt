@@ -44,16 +44,11 @@ class MovieRepositoryImp @Inject constructor(
         runCatching {
             api.getDiscoverMovies().resultDto.map { it.toDomain() }
         }.onSuccess { currentMovies ->
-            currentMovies.forEach { movie ->
-                appDatabase.withTransaction {
-                    appDatabase.movieDao().run {
-                        insertMovie(movie.toEntity())
-                        insertDiscovery(
-                            DiscoveryEntity(
-                                movieId = movie.id
-                            )
-                        )
-                    }
+            appDatabase.withTransaction {
+                appDatabase.movieDao().run {
+                    clearDiscovery()
+                    upsertMovies(currentMovies.map(Movie::toEntity))
+                    upsertDiscovery(currentMovies.map { movie -> DiscoveryEntity(movieId = movie.id) })
                 }
             }
         }
@@ -68,16 +63,11 @@ class MovieRepositoryImp @Inject constructor(
         runCatching {
             api.getTopRatedMovies().resultDto.map { it.toDomain() }
         }.onSuccess { currentMovies ->
-            currentMovies.forEach { movie ->
-                appDatabase.withTransaction {
-                    appDatabase.movieDao().run {
-                        insertMovie(movie.toEntity())
-                        insertTopRated(
-                            TopRatedEntity(
-                                movieId = movie.id
-                            )
-                        )
-                    }
+            appDatabase.withTransaction {
+                appDatabase.movieDao().run {
+                    clearTopRated()
+                    upsertMovies(currentMovies.map(Movie::toEntity))
+                    upsertTopRated(currentMovies.map { movie -> TopRatedEntity(movieId = movie.id) })
                 }
             }
         }
@@ -87,16 +77,11 @@ class MovieRepositoryImp @Inject constructor(
         runCatching {
             api.getTrendingMovies().resultDto.map { it.toDomain() }
         }.onSuccess { currentMovies ->
-            currentMovies.forEach { movie ->
-                appDatabase.withTransaction {
-                    appDatabase.movieDao().run {
-                        insertMovie(movie.toEntity())
-                        insertTrending(
-                            TrendingEntity(
-                                movieId = movie.id
-                            )
-                        )
-                    }
+            appDatabase.withTransaction {
+                appDatabase.movieDao().run {
+                    clearTrending()
+                    upsertMovies(currentMovies.map(Movie::toEntity))
+                    upsertTrending(currentMovies.map { movie -> TrendingEntity(movieId = movie.id) })
                 }
             }
         }
@@ -117,7 +102,7 @@ class MovieRepositoryImp @Inject constructor(
             api.getMovie(movieId).toMovieDetail()
         }.onSuccess { movie ->
             withContext(Dispatchers.IO) {
-                appDatabase.movieDao().insertMovie(movie.toEntity())
+                appDatabase.movieDao().upsertMovie(movie.toEntity())
             }
         }
     }

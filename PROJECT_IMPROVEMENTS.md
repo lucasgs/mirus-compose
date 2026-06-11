@@ -74,10 +74,10 @@
 - `app/src/main/java/com/dendron/mirus/data/local/MovieDao.kt`
 
 **Checklist:**
-- [ ] Batch insert movies and section rows in one transaction per feed
-- [ ] Clear stale mapping rows before re-inserting feed content
-- [ ] Mark DAO write methods as `suspend`
-- [ ] Consider `upsert` APIs where possible
+- [x] Batch insert movies and section rows in one transaction per feed
+- [x] Clear stale mapping rows before re-inserting feed content
+- [x] Mark DAO write methods as `suspend`
+- [x] Consider `upsert` APIs where possible
 
 ### 5. Tighten architecture boundaries
 **Why:** The app is layered, but still lives in a single module and some APIs are awkward.
