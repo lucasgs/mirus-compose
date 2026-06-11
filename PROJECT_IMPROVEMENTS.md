@@ -12,7 +12,7 @@
 ### Progress summary
 - [x] 1. Modernize the build setup
 - [x] 2. Fix search flow behavior
-- [ ] 3. Reduce duplicate collectors in detail screen
+- [x] 3. Reduce duplicate collectors in detail screen
 - [ ] 4. Improve Room sync efficiency
 - [ ] 5. Tighten architecture boundaries
 - [ ] 6. Improve UI scalability
@@ -62,9 +62,9 @@
 - `app/src/main/java/com/dendron/mirus/presentation/movie_detail/MovieDetailViewModel.kt`
 
 **Checklist:**
-- [ ] Collect each source once in `init`
-- [ ] Avoid nested `viewModelScope.launch { flow.launchIn(viewModelScope) }`
-- [ ] Update favorite state optimistically after toggle, or expose a single combined UI state
+- [x] Collect each source once in `init`
+- [x] Avoid nested `viewModelScope.launch { flow.launchIn(viewModelScope) }`
+- [x] Update favorite state optimistically after toggle, or expose a single combined UI state
 
 ### 4. Improve Room sync efficiency
 **Why:** Movie sync writes one movie at a time inside repeated transactions.
