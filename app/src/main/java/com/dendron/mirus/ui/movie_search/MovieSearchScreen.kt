@@ -1,6 +1,7 @@
 package com.dendron.mirus.ui.movie_search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,10 +15,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -47,7 +50,7 @@ fun MovieSearchScreen(
     modifier: Modifier = Modifier,
     viewModel: MovieSearchViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -61,10 +64,6 @@ fun MovieSearchScreen(
         coroutineScope.launch {
             navController.navigate(Screen.MovieDetailScreen.route + "/$movieId")
         }
-    }
-
-    fun searchMovie() {
-        viewModel.searchMovie()
     }
 
     Box(
@@ -87,8 +86,8 @@ fun MovieSearchScreen(
                     placeholder = {
                         Text(text = stringResource(R.string.search))
                     },
-                    value = state.value.query,
-                    onValueChange = { viewModel.onQueryChanged(it) },
+                    value = state.query,
+                    onValueChange = viewModel::onQueryChanged,
                     singleLine = true,
                     leadingIcon = {
                         Icon(
@@ -100,7 +99,7 @@ fun MovieSearchScreen(
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
-                        searchMovie()
+                        viewModel.onSearchSubmitted()
                         keyboardController?.hide()
                     }),
                     modifier = Modifier
@@ -108,31 +107,61 @@ fun MovieSearchScreen(
                         .focusRequester(focusRequester)
                 )
             }
-            if (state.value.movies.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
+            when {
+                state.query.isBlank() && state.recentSearches.isNotEmpty() -> {
+                    EmptySpace(height = 16.dp)
                     Text(
-                        text = stringResource(R.string.nothing_to_show),
+                        text = stringResource(R.string.recent_searches),
                         color = Color.White,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    EmptySpace(height = 8.dp)
+                    Column {
+                        state.recentSearches.forEach { query ->
+                            Text(
+                                text = query,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { viewModel.onRecentSearchSelected(query) }
+                                    .padding(vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
+
+                state.movies.isEmpty() && !state.isLoading && state.error.isEmpty() -> {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.Center)
+                            .fillMaxSize()
+                    ) {
+                        Text(
+                            text = if (state.query.isBlank()) {
+                                stringResource(R.string.start_typing_to_search)
+                            } else {
+                                stringResource(R.string.nothing_to_show)
+                            },
+                            color = Color.White,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
+
+                else -> {
+                    VerticalSection(
+                        movies = state.movies,
+                        showTitles = false,
+                        onItemClick = { movieId ->
+                            navigateToDetailScreen(movieId)
+                        }
                     )
                 }
-            } else {
-                VerticalSection(
-                    movies = state.value.movies,
-                    showTitles = false,
-                    onItemClick = { movieId ->
-                        navigateToDetailScreen(movieId)
-                    }
-                )
             }
         }
-        if (state.value.error.isNotEmpty()) {
+        if (state.error.isNotEmpty()) {
             Text(
-                text = state.value.error,
+                text = state.error,
                 color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -142,7 +171,7 @@ fun MovieSearchScreen(
                     .align(Alignment.Center)
             )
         }
-        if (state.value.isLoading) {
+        if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)

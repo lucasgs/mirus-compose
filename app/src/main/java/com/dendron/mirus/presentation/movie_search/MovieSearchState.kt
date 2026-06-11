@@ -6,5 +6,6 @@ data class MovieSearchState(
     val isLoading: Boolean = false,
     val movies: List<Movie> = emptyList(),
     val query: String = "",
+    val recentSearches: List<String> = emptyList(),
     val error: String = ""
 )

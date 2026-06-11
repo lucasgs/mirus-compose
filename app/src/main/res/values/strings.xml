@@ -8,6 +8,8 @@
     <string name="top_rated">Top rated</string>
     <string name="trending">Trending</string>
     <string name="search">Search</string>
+    <string name="recent_searches">Recent searches</string>
+    <string name="start_typing_to_search">Start typing to search</string>
     <string name="nothing_to_show">Nothing to show :)</string>
     <string name="no_favorites">No favorites movies yet</string>
 </resources>
