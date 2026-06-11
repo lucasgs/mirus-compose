@@ -19,7 +19,7 @@
 - [ ] 7. Refresh navigation approach
 - [ ] 8. Strengthen resilience and observability
 - [ ] 9. Improve test coverage breadth
-- [ ] 10. Repository hygiene
+- [x] 10. Repository hygiene
 
 ### 1. Modernize the build setup ✅ Done
 **Why:** The project was on older Android tooling (`AGP 7.4.2`, Kotlin `1.8.10`, Gradle `7.5`, Compose `1.3.x`) and failed to build on newer JDKs.
@@ -152,9 +152,13 @@
 - `app/src/main/java/com/dendron/mirus/data/.DS_Store`
 - `app/src/main/java/com/dendron/mirus/data/remote/.DS_Store`
 
+**Progress:**
+- Removed local `.DS_Store` files from the workspace
+- Hardened `.gitignore` to ignore nested `.DS_Store` files as well
+
 **Checklist:**
-- [ ] Remove `.DS_Store` files
-- [ ] Ignore them in `.gitignore`
+- [x] Remove `.DS_Store` files
+- [x] Ignore them in `.gitignore`
 
 ## Nice-to-have product features
 
