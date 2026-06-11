@@ -22,11 +22,15 @@ fun HorizontalSection(
         Column {
             SectionTitle(title = title)
             LazyHorizontalGrid(rows = GridCells.Fixed(rowCount)) {
-                items(movies) { movie ->
+                items(
+                    items = movies,
+                    key = { movie -> movie.id }
+                ) { movie ->
                     MovieListItem(
                         movie = movie,
                         showTitles = false,
-                        onItemClick = { onItemClick(movie.id) })
+                        onItemClick = { onItemClick(movie.id) }
+                    )
                 }
             }
         }

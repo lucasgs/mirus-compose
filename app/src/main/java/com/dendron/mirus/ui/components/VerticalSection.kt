@@ -25,7 +25,10 @@ fun VerticalSection(
             columns = GridCells.Adaptive(95.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(movies) { movie ->
+            items(
+                items = movies,
+                key = { movie -> movie.id }
+            ) { movie ->
                 MovieListItem(
                     movie = movie,
                     showTitles = showTitles,

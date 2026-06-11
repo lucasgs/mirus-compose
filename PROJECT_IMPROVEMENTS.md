@@ -97,9 +97,14 @@
 **Evidence:**
 - `app/src/main/java/com/dendron/mirus/ui/movie_list/MovieListScreen.kt`
 
+**Progress:**
+- Replaced the vertically scrolling movie list container with `LazyColumn`
+- Added stable keys to horizontal and vertical movie grids using `movie.id`
+- Left Paging 3 as a follow-up for larger catalogs and search results
+
 **Checklist:**
-- [ ] Use `LazyColumn` / `LazyRow`
-- [ ] Add stable keys for lists
+- [x] Use `LazyColumn` / `LazyRow`
+- [x] Add stable keys for lists
 - [ ] Consider Paging 3 for larger catalogs and search results
 
 ### 7. Refresh navigation approach
