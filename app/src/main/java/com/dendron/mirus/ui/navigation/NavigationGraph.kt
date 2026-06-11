@@ -50,7 +50,7 @@ fun NavigationGraph(
             ),
             enterTransition = {
                 slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Up,
+                    AnimatedContentTransitionScope.SlideDirection.Up,
                     animationSpec = tween(700)
                 )
             },
