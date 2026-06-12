@@ -1,6 +1,6 @@
 # MIRUS
 
-Introducing Mirus, a feature-rich app that lets you explore and discover movies with ease. Built with clean code guidelines, Mirus is developed using Kotlin and follows the MVVM architecture pattern. With the power of Jetpack Compose, the app provides an intuitive user interface. Enjoy browsing through a vast collection of movies, accessing detailed information, and staying up-to-date with the latest releases. Mirus is designed to work seamlessly offline, allowing you to access your favorite movies even without an internet connection. Powered by Hilt for dependency injection and Coroutines for efficient asynchronous operations.
+Mirus is a modern Android movie discovery app built with **Kotlin** and **Jetpack Compose**. It uses a layered MVVM/Clean Architecture-style structure with **Hilt**, **Room**, **Retrofit**, and **Coroutines**, and now includes stronger offline behavior, smarter search flows, and background sync with **WorkManager**.
 
 <p>
   <img src="screenshots/1.png" width="200" />
@@ -8,36 +8,75 @@ Introducing Mirus, a feature-rich app that lets you explore and discover movies 
   <img src="screenshots/3.png" width="200" />
   <img src="screenshots/4.png" width="200" />
 </p>
+
 Screenshots made with https://screenshots.pro
 
-## Android Architecture Component
+## Features
 
-[Architecture](https://developer.android.com/topic/architecture)
+- Discover, top rated, and trending movie feeds
+- Movie detail screens with favorites support
+- Offline-backed reads with Room caching
+- Debounced search with recent searches
+- Last updated + offline sync status in the movie list UI
+- Background refresh scheduling with WorkManager
+- Retry/backoff for transient sync failures
+- Official Navigation Compose-based navigation
+- Compose UI and Room instrumentation coverage
 
-[Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+## Tech stack
 
-[Offline first](https://developer.android.com/topic/architecture/data-layer/offline-first])
-
-[Kotlin](https://kotlinlang.org/)
-
-[Jetpack Compose](https://developer.android.com/jetpack/compose)
-
-[Jetpack View Model](https://developer.android.com/topic/libraries/architecture/viewmodel)
-
-[Jetpack Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle)
-
-## Libraries
-
+- [Kotlin](https://kotlinlang.org/)
+- [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- [Android ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+- [Coroutines / Flow](https://kotlinlang.org/docs/coroutines-overview.html)
 - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
-
-- [Coroutines](https://kotlinlang.org/docs/reference/coroutines.html)
-
+- [Room](https://developer.android.com/training/data-storage/room)
 - [Retrofit](https://github.com/square/retrofit)
+- [OkHttp](https://square.github.io/okhttp/)
+- [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager)
+- [Coil](https://coil-kt.github.io/coil/)
+- [TMDB API](https://www.themoviedb.org/documentation/api)
 
-- [Coil](https://github.com/google/gson)
+## Architecture notes
 
-- [TMDB](https://www.themoviedb.org/documentation/api)
+Mirus keeps a clear separation between:
 
-Add your TMDB key to local.properties before use :)
-> tmdb\_api\_key = "YOUR_KEY"
+- `data`
+- `domain`
+- `presentation`
+- `ui`
 
+It follows Android architecture guidance and an offline-first direction using Room-backed local data.
+
+Helpful references:
+
+- [Android Architecture](https://developer.android.com/topic/architecture)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Offline first](https://developer.android.com/topic/architecture/data-layer/offline-first)
+
+## Setup
+
+Add your TMDB key to `local.properties` before running the app:
+
+```properties
+tmdb_api_key="YOUR_KEY"
+```
+
+## Build and test
+
+```bash
+./gradlew :app:compileDebugKotlin
+./gradlew testDebugUnitTest
+./gradlew connectedDebugAndroidTest
+```
+
+## Recent improvements
+
+- Modernized Gradle / AGP / Kotlin toolchain
+- Moved dependency versions into a version catalog
+- Improved search flow with debounce and cancellation
+- Reduced duplicate collectors in the detail flow
+- Batched Room sync work more efficiently
+- Added background sync scheduling via WorkManager
+- Surfaced offline mode and last successful sync time in the UI
+- Expanded UI and database test coverage
