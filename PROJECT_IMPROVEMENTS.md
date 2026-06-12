@@ -156,9 +156,14 @@
 - `app/src/test/java/...`
 - `app/src/androidTest/java/com/dendron/mirus/ExampleInstrumentedTest.kt`
 
+**Progress:**
+- Added Compose UI coverage for list, search, favorites, and detail screens
+- Added Room DAO instrumentation coverage for relations and sync refresh behavior
+- Updated favorites use case assertions to match the shared `Resource` result model
+
 **Checklist:**
-- [ ] Add Compose UI tests for list, search, favorites, and detail screens
-- [ ] Add DAO tests for Room relations and sync behavior
+- [x] Add Compose UI tests for list, search, favorites, and detail screens
+- [x] Add DAO tests for Room relations and sync behavior
 - [ ] Add screenshot tests for important states
 
 ### 10. Repository hygiene

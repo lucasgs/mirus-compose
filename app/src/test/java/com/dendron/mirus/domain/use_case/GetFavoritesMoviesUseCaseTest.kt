@@ -2,6 +2,7 @@ package com.dendron.mirus.domain.use_case
 
 import app.cash.turbine.test
 import com.dendron.mirus.MainDispatcherRule
+import com.dendron.mirus.common.Resource
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.movies
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,57 +40,59 @@ class GetFavoritesMoviesUseCaseTest {
 
     @Test
     fun `invoke should call repository to get discovery movies`() = runTest {
-        whenever(favoriteMovieRepository.getFavoriteMovies()).thenReturn(
-            flowOf(movies)
-        )
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenReturn(flowOf(movies))
+
         getFavoritesMovieUseCase.invoke().collect()
+
         verify(favoriteMovieRepository).getFavoriteMovies()
     }
 
     @Test
     fun `invoke should return loading and success when the repository returns data`() = runTest {
-        val expected = movies
-
-        whenever(favoriteMovieRepository.getFavoriteMovies()).thenReturn(
-            flowOf(movies)
-        )
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenReturn(flowOf(movies))
 
         getFavoritesMovieUseCase().test {
-            assertEquals(expected, awaitItem())
+            assertEquals(Resource.Loading<List<com.dendron.mirus.domain.model.Movie>>(), awaitItem())
+            assertEquals(Resource.Success(movies), awaitItem())
             awaitComplete()
         }
     }
 
     @Test
-    fun `invoke should return error when the repository returns httpexception`() = runTest {
+    fun `invoke should return error when the repository throws httpexception`() = runTest {
         whenever(favoriteMovieRepository.getFavoriteMovies()).thenThrow(HttpException::class.java)
 
         getFavoritesMovieUseCase().test {
-            awaitError()
+            assertEquals(Resource.Loading<List<com.dendron.mirus.domain.model.Movie>>(), awaitItem())
+            val error = awaitItem()
+            assert(error is Resource.Error)
+            awaitComplete()
         }
     }
 
     @Test
-    fun `invoke should return error when the repository returns ioexception`() = runTest {
-        whenever(favoriteMovieRepository.getFavoriteMovies()).thenAnswer {
-            throw IOException()
-        }
+    fun `invoke should return error when the repository throws ioexception`() = runTest {
+        whenever(favoriteMovieRepository.getFavoriteMovies()).thenAnswer { throw IOException() }
 
         getFavoritesMovieUseCase().test {
-            awaitError()
+            assertEquals(Resource.Loading<List<com.dendron.mirus.domain.model.Movie>>(), awaitItem())
+            val error = awaitItem()
+            assert(error is Resource.Error)
+            awaitComplete()
         }
     }
 
     @Test
-    fun `invoke should return error when the repository returns exception`() = runTest {
+    fun `invoke should return error when the repository throws exception`() = runTest {
         val expectedErrorMessage = "error"
         whenever(favoriteMovieRepository.getFavoriteMovies()).thenAnswer {
             throw Exception(expectedErrorMessage)
         }
 
         getFavoritesMovieUseCase().test {
-            awaitError()
+            assertEquals(Resource.Loading<List<com.dendron.mirus.domain.model.Movie>>(), awaitItem())
+            assertEquals(Resource.Error<List<com.dendron.mirus.domain.model.Movie>>(expectedErrorMessage), awaitItem())
+            awaitComplete()
         }
     }
-
 }
