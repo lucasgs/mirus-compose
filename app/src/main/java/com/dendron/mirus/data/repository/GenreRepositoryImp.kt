@@ -31,16 +31,13 @@ class GenreRepositoryImp @Inject constructor(
             .map { genres -> genres.map { genre -> genre.toDomain() } }
 
     override suspend fun syncMovieGenres() {
-        runCatching {
-            api.getMovieGenres()
-        }.onSuccess { result ->
-            withContext(IO) {
-                appDatabase.withTransaction {
-                    appDatabase.genreDao().run {
-                        deleteAll()
-                        result.genreDtos.forEach { genre ->
-                            insertGenre(genre.toEntity())
-                        }
+        val result = api.getMovieGenres()
+        withContext(IO) {
+            appDatabase.withTransaction {
+                appDatabase.genreDao().run {
+                    deleteAll()
+                    result.genreDtos.forEach { genre ->
+                        insertGenre(genre.toEntity())
                     }
                 }
             }

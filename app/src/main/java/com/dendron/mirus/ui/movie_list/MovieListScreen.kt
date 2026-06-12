@@ -1,5 +1,6 @@
 package com.dendron.mirus.ui.movie_list
 
+import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,14 +23,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.dendron.mirus.R
 import com.dendron.mirus.presentation.ContentType
 import com.dendron.mirus.presentation.movie_list.MovieListViewModel
+import com.dendron.mirus.presentation.movie_list.MovieSyncStatus
 import com.dendron.mirus.ui.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.ui.movie_list.components.DiscoverySection
 import com.dendron.mirus.ui.movie_list.components.TopRatedSection
@@ -106,6 +110,7 @@ fun MovieListWrapper(
     val trendingState = viewModel.trendingMovies.collectAsStateWithLifecycle()
     val isLoading = viewModel.isLoading.collectAsStateWithLifecycle()
     val isError = viewModel.isError.collectAsStateWithLifecycle()
+    val syncStatus = viewModel.syncStatus.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -121,6 +126,9 @@ fun MovieListWrapper(
             .padding(4.dp)
     ) {
         LazyColumn {
+            item(key = "sync-status") {
+                SyncStatusBanner(syncStatus = syncStatus.value)
+            }
             item(key = "top-rated") {
                 TopRatedSection(
                     movies = topRatedState.value.movies,
@@ -155,6 +163,36 @@ fun MovieListWrapper(
         if (isLoading.value) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SyncStatusBanner(syncStatus: MovieSyncStatus) {
+    if (!syncStatus.isOffline && syncStatus.lastUpdatedAtMillis == null) {
+        return
+    }
+
+    val lastUpdatedText = syncStatus.lastUpdatedAtMillis?.let { lastUpdatedAtMillis ->
+        DateUtils.getRelativeTimeSpanString(lastUpdatedAtMillis).toString()
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        if (syncStatus.isOffline) {
+            Text(
+                text = stringResource(R.string.offline_mode),
+                color = Color.White,
+            )
+        }
+        lastUpdatedText?.let { formattedTime ->
+            Text(
+                text = stringResource(R.string.last_updated, formattedTime),
+                color = Color.LightGray,
             )
         }
     }

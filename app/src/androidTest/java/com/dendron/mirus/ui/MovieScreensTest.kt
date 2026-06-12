@@ -13,6 +13,7 @@ import com.dendron.mirus.domain.model.Movie
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.domain.repository.GenreRepository
 import com.dendron.mirus.domain.repository.MovieRepository
+import com.dendron.mirus.domain.repository.SyncMetadataRepository
 import com.dendron.mirus.domain.use_case.GetDiscoverMoviesUseCase
 import com.dendron.mirus.domain.use_case.GetFavoritesMovieUseCase
 import com.dendron.mirus.domain.use_case.GetMovieDetailsUseCase
@@ -58,8 +59,10 @@ class MovieScreensTest {
             syncMoviesUseCase = SyncMoviesUseCase(
                 networkChecker = FakeNetworkChecker(isOnline = false),
                 movieRepository = movieRepository,
-                genreRepository = FakeGenreRepository()
-            )
+                genreRepository = FakeGenreRepository(),
+                syncMetadataRepository = FakeSyncMetadataRepository(lastSuccessfulSyncAtMillis = 1_000L),
+            ),
+            syncMetadataRepository = FakeSyncMetadataRepository(lastSuccessfulSyncAtMillis = 1_000L),
         )
 
         composeRule.setContent {
@@ -71,6 +74,7 @@ class MovieScreensTest {
             }
         }
 
+        composeRule.onNodeWithText("Offline mode").fetchSemanticsNode()
         composeRule.onNodeWithText("Top rated").fetchSemanticsNode()
         composeRule.onNodeWithText("Discovery").fetchSemanticsNode()
         composeRule.onNodeWithText("Trending").fetchSemanticsNode()
@@ -226,5 +230,17 @@ class MovieScreensTest {
         private val isOnline: Boolean
     ) : NetworkChecker {
         override fun isOnline(): Boolean = isOnline
+    }
+
+    private class FakeSyncMetadataRepository(
+        lastSuccessfulSyncAtMillis: Long? = null,
+    ) : SyncMetadataRepository {
+        private val state = MutableStateFlow(lastSuccessfulSyncAtMillis)
+
+        override val lastSuccessfulSyncAtMillis: Flow<Long?> = state
+
+        override suspend fun recordSuccessfulSync(timestampMillis: Long) {
+            state.value = timestampMillis
+        }
     }
 }

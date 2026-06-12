@@ -1,9 +1,12 @@
 package com.dendron.mirus.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
+import com.dendron.mirus.BuildConfig
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.data.device.AndroidNetworkChecker
+import com.dendron.mirus.data.device.SharedPreferencesSyncMetadataRepository
 import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.remote.TheMovieDBApi
 import com.dendron.mirus.data.repository.FavoriteMovieRepositoryImp
@@ -13,6 +16,7 @@ import com.dendron.mirus.domain.NetworkChecker
 import com.dendron.mirus.domain.repository.FavoriteMovieRepository
 import com.dendron.mirus.domain.repository.GenreRepository
 import com.dendron.mirus.domain.repository.MovieRepository
+import com.dendron.mirus.domain.repository.SyncMetadataRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +24,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -33,6 +38,15 @@ object AppModule {
     fun provideMoviesApi(): TheMovieDBApi {
         val moviesClient = OkHttpClient().newBuilder()
             .addInterceptor(authInterceptor)
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BASIC
+                        }
+                    )
+                }
+            }
             .build()
 
         return Retrofit.Builder()
@@ -96,4 +110,16 @@ object AppModule {
     fun provideNetworkChecker(@ApplicationContext appContext: Context): NetworkChecker {
         return AndroidNetworkChecker(appContext)
     }
+
+    @Provides
+    @Singleton
+    fun provideSyncSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
+        return appContext.getSharedPreferences(Constants.SYNC_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSyncMetadataRepository(
+        sharedPreferencesSyncMetadataRepository: SharedPreferencesSyncMetadataRepository,
+    ): SyncMetadataRepository = sharedPreferencesSyncMetadataRepository
 }

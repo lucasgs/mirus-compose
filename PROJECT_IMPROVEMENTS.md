@@ -143,11 +143,17 @@
 - `app/src/main/java/com/dendron/mirus/domain/use_case/SyncMoviesUseCase.kt`
 - `app/src/main/java/com/dendron/mirus/di/AppModule.kt`
 
+**Progress:**
+- Added debug-only OkHttp logging for API calls
+- Added retry/backoff for transient sync failures and explicit offline sync messaging
+- Persisted and surfaced last successful sync time plus offline status in the movie list UI
+- Left WorkManager as a follow-up for true background refresh scheduling
+
 **Checklist:**
-- [ ] Add logging/interceptors for debug builds only
-- [ ] Add retry/backoff rules for transient network failures
+- [x] Add logging/interceptors for debug builds only
+- [x] Add retry/backoff rules for transient network failures
 - [ ] Consider WorkManager for background refresh
-- [ ] Surface "last updated" and offline status in the UI
+- [x] Surface "last updated" and offline status in the UI
 
 ### 9. Improve test coverage breadth
 **Why:** There are many unit tests, but almost no instrumentation/UI coverage.

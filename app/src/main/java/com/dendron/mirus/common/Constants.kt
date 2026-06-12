@@ -11,5 +11,7 @@ object Constants {
 
     const val MOVIE_ID_KEY = "movieId"
     const val DB_NAME = "mirus-database"
+    const val SYNC_PREFERENCES_NAME = "sync-preferences"
+    const val LAST_SUCCESSFUL_SYNC_AT_KEY = "last_successful_sync_at"
 
 }

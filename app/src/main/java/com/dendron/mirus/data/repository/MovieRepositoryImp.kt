@@ -40,15 +40,12 @@ class MovieRepositoryImp @Inject constructor(
     }
 
     private suspend fun syncDiscoveryMovies() {
-        runCatching {
-            api.getDiscoverMovies().resultDto.map { it.toDomain() }
-        }.onSuccess { currentMovies ->
-            appDatabase.withTransaction {
-                appDatabase.movieDao().run {
-                    clearDiscovery()
-                    upsertMovies(currentMovies.map(Movie::toEntity))
-                    upsertDiscovery(currentMovies.map { movie -> DiscoveryEntity(movieId = movie.id) })
-                }
+        val currentMovies = api.getDiscoverMovies().resultDto.map { it.toDomain() }
+        appDatabase.withTransaction {
+            appDatabase.movieDao().run {
+                clearDiscovery()
+                upsertMovies(currentMovies.map(Movie::toEntity))
+                upsertDiscovery(currentMovies.map { movie -> DiscoveryEntity(movieId = movie.id) })
             }
         }
     }
@@ -58,29 +55,23 @@ class MovieRepositoryImp @Inject constructor(
             .map { movies -> movies.map { item -> item.movie.toDomain() } }
 
     private suspend fun syncTopRatedMovies() {
-        runCatching {
-            api.getTopRatedMovies().resultDto.map { it.toDomain() }
-        }.onSuccess { currentMovies ->
-            appDatabase.withTransaction {
-                appDatabase.movieDao().run {
-                    clearTopRated()
-                    upsertMovies(currentMovies.map(Movie::toEntity))
-                    upsertTopRated(currentMovies.map { movie -> TopRatedEntity(movieId = movie.id) })
-                }
+        val currentMovies = api.getTopRatedMovies().resultDto.map { it.toDomain() }
+        appDatabase.withTransaction {
+            appDatabase.movieDao().run {
+                clearTopRated()
+                upsertMovies(currentMovies.map(Movie::toEntity))
+                upsertTopRated(currentMovies.map { movie -> TopRatedEntity(movieId = movie.id) })
             }
         }
     }
 
     private suspend fun syncTrendingMovies() {
-        runCatching {
-            api.getTrendingMovies().resultDto.map { it.toDomain() }
-        }.onSuccess { currentMovies ->
-            appDatabase.withTransaction {
-                appDatabase.movieDao().run {
-                    clearTrending()
-                    upsertMovies(currentMovies.map(Movie::toEntity))
-                    upsertTrending(currentMovies.map { movie -> TrendingEntity(movieId = movie.id) })
-                }
+        val currentMovies = api.getTrendingMovies().resultDto.map { it.toDomain() }
+        appDatabase.withTransaction {
+            appDatabase.movieDao().run {
+                clearTrending()
+                upsertMovies(currentMovies.map(Movie::toEntity))
+                upsertTrending(currentMovies.map { movie -> TrendingEntity(movieId = movie.id) })
             }
         }
     }
