@@ -9,24 +9,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dendron.mirus.ui.theme.MyPurple700
 
 @Composable
 fun MainBottomNavigation(navController: NavHostController) {
-    val items = listOf(
-        Screen.MovieListScreen,
-        Screen.SearchMovie,
-        Screen.FavoriteMovieScreen,
-    )
+    val items = Screen.topLevelDestinations
     NavigationBar(
         containerColor = MyPurple700,
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+        val currentDestination = navBackStackEntry?.destination
         items.forEach { item ->
-            val isCurrentRoute = currentRoute == item.route
+            val isCurrentRoute = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationBarItem(icon = {
                 Icon(
                     item.icon,
@@ -50,10 +48,8 @@ fun MainBottomNavigation(navController: NavHostController) {
                 ),
                 onClick = {
                     navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { screen_route ->
-                            popUpTo(screen_route) {
-                                saveState = true
-                            }
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
                         launchSingleTop = true
                         restoreState = true

@@ -16,7 +16,7 @@
 - [ ] 4. Improve Room sync efficiency
 - [ ] 5. Tighten architecture boundaries
 - [ ] 6. Improve UI scalability
-- [ ] 7. Refresh navigation approach
+- [x] 7. Refresh navigation approach
 - [ ] 8. Strengthen resilience and observability
 - [ ] 9. Improve test coverage breadth
 - [x] 10. Repository hygiene
@@ -112,17 +112,29 @@
 - [x] Add stable keys for lists
 - [ ] Consider Paging 3 for larger catalogs and search results
 
-### 7. Refresh navigation approach
-**Why:** Navigation depends on Accompanist animation, which is largely superseded by official navigation improvements.
+### 7. Refresh navigation approach ✅ Done
+**Why:** Navigation depended on Accompanist animation, which is largely superseded by official Navigation Compose APIs.
 
-**Evidence:**
-- `app/src/main/java/com/dendron/mirus/ui/navigation/NavigationGraph.kt`
+**Done:**
+- Migrated from Accompanist navigation animation to official `androidx.navigation.compose` APIs
+- Replaced ad-hoc detail route string building with centralized route helpers in `Screen`
+- Reused shared top-level destination metadata for bottom navigation state
+- Cleaned up navigation-related code in `MainActivity.kt`
+
+**Validation:**
+- `./gradlew compileDebugKotlin` ✅
+- `./gradlew testDebugUnitTest` ⚠️ existing unrelated failures in `GetFavoritesMoviesUseCaseTest`
+
+**Files touched:**
 - `app/src/main/java/com/dendron/mirus/presentation/MainActivity.kt`
-
-**Checklist:**
-- [ ] Migrate toward current Navigation Compose APIs
-- [ ] Consider type-safe routes
-- [ ] Clean up small code smells like the stray `Scaffold` expression in `MainActivity.kt`
+- `app/src/main/java/com/dendron/mirus/ui/navigation/NavigationGraph.kt`
+- `app/src/main/java/com/dendron/mirus/ui/navigation/MainBottomNavigation.kt`
+- `app/src/main/java/com/dendron/mirus/ui/navigation/Screen.kt`
+- `app/src/main/java/com/dendron/mirus/ui/movie_list/MovieListScreen.kt`
+- `app/src/main/java/com/dendron/mirus/ui/movie_search/MovieSearchScreen.kt`
+- `app/src/main/java/com/dendron/mirus/ui/movie_favorite/MovieFavoriteScreen.kt`
+- `app/build.gradle`
+- `gradle/libs.versions.toml`
 
 ### 8. Strengthen resilience and observability
 **Why:** Sync and network handling are basic and do not expose much retry/state detail.

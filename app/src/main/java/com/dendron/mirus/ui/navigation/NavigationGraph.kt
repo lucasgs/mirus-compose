@@ -1,6 +1,6 @@
 package com.dendron.mirus.ui.navigation
 
-import androidx.compose.animation.*
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,18 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.dendron.mirus.common.Constants
 import com.dendron.mirus.presentation.ContentType
 import com.dendron.mirus.ui.movie_detail.MovieDetailScreen
 import com.dendron.mirus.ui.movie_favorite.MovieFavoriteScreen
 import com.dendron.mirus.ui.movie_list.MovieListScreen
 import com.dendron.mirus.ui.movie_search.MovieSearchScreen
 import com.dendron.mirus.ui.theme.MyPurple700
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
@@ -28,7 +26,7 @@ fun NavigationGraph(
     contentType: ContentType,
     modifier: Modifier = Modifier
 ) {
-    AnimatedNavHost(
+    NavHost(
         navController = navController,
         startDestination = Screen.MovieListScreen.route,
         modifier = modifier
@@ -42,15 +40,15 @@ fun NavigationGraph(
         }
 
         composable(
-            route = Screen.MovieDetailScreen.route + "/{movieId}",
+            route = Screen.MovieDetailScreen.routePattern,
             arguments = listOf(
-                navArgument(Constants.MOVIE_ID_KEY) {
+                navArgument(Screen.MovieDetailScreen.MOVIE_ID_ARG) {
                     type = NavType.StringType
                 },
             ),
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Up,
+                slideInVertically(
+                    initialOffsetY = { it },
                     animationSpec = tween(700)
                 )
             },

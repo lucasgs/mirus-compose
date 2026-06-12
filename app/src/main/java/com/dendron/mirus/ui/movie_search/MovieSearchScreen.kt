@@ -62,7 +62,7 @@ fun MovieSearchScreen(
 
     fun navigateToDetailScreen(movieId: Int) {
         coroutineScope.launch {
-            navController.navigate(Screen.MovieDetailScreen.route + "/$movieId")
+            navController.navigate(Screen.MovieDetailScreen.createRoute(movieId))
         }
     }
 
