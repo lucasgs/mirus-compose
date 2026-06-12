@@ -13,11 +13,11 @@
 - [x] 1. Modernize the build setup
 - [x] 2. Fix search flow behavior
 - [x] 3. Reduce duplicate collectors in detail screen
-- [ ] 4. Improve Room sync efficiency
+- [x] 4. Improve Room sync efficiency
 - [ ] 5. Tighten architecture boundaries
 - [ ] 6. Improve UI scalability
 - [x] 7. Refresh navigation approach
-- [ ] 8. Strengthen resilience and observability
+- [x] 8. Strengthen resilience and observability
 - [ ] 9. Improve test coverage breadth
 - [x] 10. Repository hygiene
 
@@ -66,7 +66,7 @@
 - [x] Avoid nested `viewModelScope.launch { flow.launchIn(viewModelScope) }`
 - [x] Update favorite state optimistically after toggle, or expose a single combined UI state
 
-### 4. Improve Room sync efficiency
+### 4. Improve Room sync efficiency ✅ Done
 **Why:** Movie sync writes one movie at a time inside repeated transactions.
 
 **Evidence:**
@@ -136,7 +136,7 @@
 - `app/build.gradle`
 - `gradle/libs.versions.toml`
 
-### 8. Strengthen resilience and observability
+### 8. Strengthen resilience and observability ✅ Done
 **Why:** Sync and network handling are basic and do not expose much retry/state detail.
 
 **Evidence:**
@@ -147,12 +147,12 @@
 - Added debug-only OkHttp logging for API calls
 - Added retry/backoff for transient sync failures and explicit offline sync messaging
 - Persisted and surfaced last successful sync time plus offline status in the movie list UI
-- Left WorkManager as a follow-up for true background refresh scheduling
+- Added WorkManager-based background refresh scheduling with network constraints and backoff
 
 **Checklist:**
 - [x] Add logging/interceptors for debug builds only
 - [x] Add retry/backoff rules for transient network failures
-- [ ] Consider WorkManager for background refresh
+- [x] Consider WorkManager for background refresh
 - [x] Surface "last updated" and offline status in the UI
 
 ### 9. Improve test coverage breadth

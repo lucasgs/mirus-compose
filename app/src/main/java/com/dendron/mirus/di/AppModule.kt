@@ -3,10 +3,13 @@ package com.dendron.mirus.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.dendron.mirus.BuildConfig
 import com.dendron.mirus.common.Constants
 import com.dendron.mirus.data.device.AndroidNetworkChecker
 import com.dendron.mirus.data.device.SharedPreferencesSyncMetadataRepository
+import com.dendron.mirus.data.device.SyncWorkEnqueuer
+import com.dendron.mirus.data.device.WorkManagerSyncWorkEnqueuer
 import com.dendron.mirus.data.local.AppDatabase
 import com.dendron.mirus.data.remote.TheMovieDBApi
 import com.dendron.mirus.data.repository.FavoriteMovieRepositoryImp
@@ -116,6 +119,18 @@ object AppModule {
     fun provideSyncSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
         return appContext.getSharedPreferences(Constants.SYNC_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(@ApplicationContext appContext: Context): WorkManager {
+        return WorkManager.getInstance(appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSyncWorkEnqueuer(
+        workManagerSyncWorkEnqueuer: WorkManagerSyncWorkEnqueuer,
+    ): SyncWorkEnqueuer = workManagerSyncWorkEnqueuer
 
     @Provides
     @Singleton
